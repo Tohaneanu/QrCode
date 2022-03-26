@@ -27,23 +27,129 @@ public class MaskSelector {
     }
 
     public static int calculatePenaltySameColored(boolean[][] data) {
-        throw new IllegalStateException();
+        int dataSize = data.length;
+        int penalty = 0;
+        boolean lastRow;
+        boolean lastCol;
+
+        for (int i = 0; i < dataSize; i++) {
+            lastRow = data[i][0];
+            lastCol = data[i][0];
+            int currLenRow = 1;
+            int currLenCol = 1;
+
+            for (int j = 1; j < dataSize; j++) {
+                //Horizontal
+                if (data[i][j] == lastRow) {
+                    currLenRow++;
+                } else {
+                    if (currLenRow >= 5) {
+                        penalty += 3 + currLenRow - 5;
+                    }
+
+                    lastRow = data[i][j];
+                    currLenRow = 1;
+                }
+
+                //Vertical
+                if (data[j][i] == lastCol) {
+                    currLenCol++;
+                } else {
+                    if (currLenCol >= 5) {
+                        penalty += 3 + currLenCol - 5;
+                    }
+
+                    lastCol = data[j][i];
+                    currLenCol = 1;
+                }
+            }
+
+            //Horizontal
+            if (currLenRow >= 5) {
+                penalty += 3 + currLenRow - 5;
+            }
+
+            //Vertical
+            if (currLenCol >= 5) {
+                penalty += 3 + currLenCol - 5;
+            }
+        }
+
+        return penalty;
     }
 
     public static int calculatePenalty2x2(boolean[][] arr) {
-        throw new IllegalStateException();
+        int arrSize = arr.length;
+        int penalty = 0;
+
+        for (int i = 0; i < arrSize; i++) {
+            for (int j = 0; j < arrSize; j++) {
+                if (arr[i][j] == arr[i][j])
+                    if (arr[i][j + 1] == arr[i][j])
+                        if (arr[i + 1][j + 1] == arr[i][j])
+                            penalty += 3;
+            }
+        }
+
+        return penalty;
     }
 
     public static int calculatePenaltyBlackWhite(boolean[][] arr) {
-        throw new IllegalStateException();
+        int arrSize = arr.length;
+        int penalty = 0;
+
+        String[] patterns = { "00001011101", "10111010000" };
+
+        String[] qrV = new String[arrSize];
+        String[] qrH = new String[arrSize];
+
+        for (int i = 0; i < arrSize; i++) {
+            for (int j = 0; j < arrSize; j++) {
+                qrV[i] += (char) (arr[i][j] == false ? '0' : '1');
+                qrH[i] += (char) (arr[i][j] == false ? '0' : '1');
+            }
+        }
+
+        for (int i = 0; i < arrSize; i++) {
+            if(qrV[i].contains(patterns[0]) == true) {
+                penalty += 40;
+            }
+
+            if(qrV[i].contains(patterns[1]) == true) {
+                penalty += 40;
+            }
+
+            if(qrH[i].contains(patterns[0]) == true) {
+                penalty += 40;
+            }
+
+            if(qrH[i].contains(patterns[1]) == true) {
+                penalty += 40;
+            }
+
+        }
+
+        return penalty;
     }
 
     public static int calculatePenaltyPattern(boolean[][] array) {
-        throw new IllegalStateException();
+        int arrSize = array.length;
+        int darkModules = 0;
+        int modules = arrSize * arrSize;
+
+        for (int i = 0; i < arrSize; i++) {
+            for (int j = 0; j < arrSize; j++) {
+                if (array[i][j] == true)
+                    darkModules++;
+            }
+        }
+
+        return 10 * (Math.abs(2 * darkModules - modules) * 10 / modules);
     }
 
     public static int calculatePenaltyFor(boolean[][] data) {
-        throw new IllegalStateException();
+        return calculatePenalty2x2(data) + calculatePenaltyBlackWhite(data) + calculatePenaltyPattern(data)
+                + calculatePenaltySameColored(data);
     }
 
     public static MaskPattern maskWithBestMask(boolean[][] data, ErrorCorrection correction, ReservedModulesMask modulesMask) {
