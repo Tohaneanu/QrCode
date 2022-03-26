@@ -6,7 +6,24 @@ import java.text.Format;
 
 public class MaskSelector {
     public static void placeFormatInformation(boolean[][] res, int formatInformation) {
-        throw new IllegalStateException();
+        String binary = Integer.toBinaryString(formatInformation);
+        for (int i = 0; i < 6; i++) {
+            res[8][i] = (int) binary.charAt(i) == 1;
+        }
+        res[8][7] = (int) binary.charAt(6) == 1;
+        res[8][8] = (int) binary.charAt(7) == 1;
+        res[7][8] = (int) binary.charAt(8) == 1;
+        int j = 9;
+        for (int i = 5; i > -1; i--) {
+            res[i][8] = (int) binary.charAt(j++) == 1;
+        }
+        for (int i = 0; i < 7; i++) {
+            res[res.length - 1 - i][8] = (int) binary.charAt(i) == 1;
+        }
+        j = 7;
+        for (int i = 7; i > -1; i--) {
+            res[8][res.length - 1 - i] = (int) binary.charAt(j++) == 1;
+        }
     }
 
     public static int calculatePenaltySameColored(boolean[][] data) {
@@ -45,25 +62,7 @@ public class MaskSelector {
         FormatInformation formatInformation = FormatInformation.get(correction, mask);
         MaskApplier.applyTo(data, mask.maskFunction(), modulesMask);
         int inform = formatInformation.formatInfo();
-        String binary = Integer.toBinaryString(inform);
-        for (int i = 0; i < 6; i++) {
-            data[8][i] = (int) binary.charAt(i) == 1;
-        }
-        data[8][7] = (int) binary.charAt(6) == 1;
-        data[8][8] = (int) binary.charAt(7) == 1;
-        data[7][8] = (int) binary.charAt(8) == 1;
-        int j = 9;
-        for (int i = 5; i > -1; i--) {
-            data[i][8] = (int) binary.charAt(j++) == 1;
-        }
-        for (int i = 0; i < 7; i++) {
-            data[data.length - 1 - i][8] = (int) binary.charAt(i) == 1;
-        }
-        j = 7;
-        for (int i = 7; i > -1; i--) {
-            data[8][data.length - 1 - i] = (int) binary.charAt(j++) == 1;
-        }
-
+        placeFormatInformation(data,inform);
         return mask;
     }
 }
