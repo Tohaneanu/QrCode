@@ -46,11 +46,9 @@ public class MaskSelector {
                     if (currLenRow >= 5) {
                         penalty += 3 + currLenRow - 5;
                     }
-
                     lastRow = data[i][j];
                     currLenRow = 1;
                 }
-
                 //Vertical
                 if (data[j][i] == lastCol) {
                     currLenCol++;
@@ -68,7 +66,6 @@ public class MaskSelector {
             if (currLenRow >= 5) {
                 penalty += 3 + currLenRow - 5;
             }
-
             //Vertical
             if (currLenCol >= 5) {
                 penalty += 3 + currLenCol - 5;
@@ -85,9 +82,7 @@ public class MaskSelector {
         for (int i = 0; i < arrSize; i++) {
             for (int j = 0; j < arrSize; j++) {
                 if (arr[i][j] == arr[i][j])
-                    if (arr[i][j + 1] == arr[i][j])
-                        if (arr[i + 1][j + 1] == arr[i][j])
-                            penalty += 3;
+                    if (arr[i][j + 1] == arr[i][j]) if (arr[i + 1][j + 1] == arr[i][j]) penalty += 3;
             }
         }
 
@@ -98,32 +93,32 @@ public class MaskSelector {
         int arrSize = arr.length;
         int penalty = 0;
 
-        String[] patterns = { "00001011101", "10111010000" };
+        String[] patterns = {"00001011101", "10111010000"};
 
         String[] qrV = new String[arrSize];
         String[] qrH = new String[arrSize];
 
         for (int i = 0; i < arrSize; i++) {
             for (int j = 0; j < arrSize; j++) {
-                qrV[i] += (char) (arr[i][j] == false ? '0' : '1');
-                qrH[i] += (char) (arr[i][j] == false ? '0' : '1');
+                qrV[i] += (char) (!arr[i][j] ? '0' : '1');
+                qrH[i] += (char) (!arr[i][j] ? '0' : '1');
             }
         }
 
         for (int i = 0; i < arrSize; i++) {
-            if(qrV[i].contains(patterns[0]) == true) {
+            if (qrV[i].contains(patterns[0])) {
                 penalty += 40;
             }
 
-            if(qrV[i].contains(patterns[1]) == true) {
+            if (qrV[i].contains(patterns[1])) {
                 penalty += 40;
             }
 
-            if(qrH[i].contains(patterns[0]) == true) {
+            if (qrH[i].contains(patterns[0])) {
                 penalty += 40;
             }
 
-            if(qrH[i].contains(patterns[1]) == true) {
+            if (qrH[i].contains(patterns[1])) {
                 penalty += 40;
             }
 
@@ -139,8 +134,7 @@ public class MaskSelector {
 
         for (int i = 0; i < arrSize; i++) {
             for (int j = 0; j < arrSize; j++) {
-                if (array[i][j] == true)
-                    darkModules++;
+                if (array[i][j]) darkModules++;
             }
         }
 
@@ -148,8 +142,7 @@ public class MaskSelector {
     }
 
     public static int calculatePenaltyFor(boolean[][] data) {
-        return calculatePenalty2x2(data) + calculatePenaltyBlackWhite(data) + calculatePenaltyPattern(data)
-                + calculatePenaltySameColored(data);
+        return calculatePenalty2x2(data) + calculatePenaltyBlackWhite(data) + calculatePenaltyPattern(data) + calculatePenaltySameColored(data);
     }
 
     public static MaskPattern maskWithBestMask(boolean[][] data, ErrorCorrection correction, ReservedModulesMask modulesMask) {
@@ -159,7 +152,7 @@ public class MaskSelector {
         MaskPattern mask = MaskPattern.MASK000;
         for (MaskPattern maskPattern : maskPatterns) {
             MaskApplier.applyTo(data, maskPattern.maskFunction(), modulesMask);
-            int i = calculatePenaltySameColored(data) + calculatePenalty2x2(data) + calculatePenaltyBlackWhite(data) + calculatePenaltyPattern(data) + calculatePenaltyFor(data);
+            int i = calculatePenaltyFor(data);
             if (i < comp) {
                 comp = i;
                 mask = maskPattern;
@@ -168,7 +161,7 @@ public class MaskSelector {
         FormatInformation formatInformation = FormatInformation.get(correction, mask);
         MaskApplier.applyTo(data, mask.maskFunction(), modulesMask);
         int inform = formatInformation.formatInfo();
-        placeFormatInformation(data,inform);
+        placeFormatInformation(data, inform);
         return mask;
     }
 }
