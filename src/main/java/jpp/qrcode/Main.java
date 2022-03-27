@@ -1,5 +1,6 @@
 package jpp.qrcode;
 
+import jpp.qrcode.decode.DataDestructurer;
 import jpp.qrcode.io.TextReader;
 
 import java.io.File;
@@ -65,23 +66,28 @@ public class Main {
         }
         QRCode validatedFromBooleans = createValidatedFromBooleans(data);
         ReservedModulesMask mask = forVersion(VersionInformation.fromBits(31892));
-        boolean[][] msk = mask.getMask();
-        int[][] test=new int[msk.length][msk.length];
-        for (int i=0; i< msk.length;i++)
-            for (int j=0;j< msk.length;j++)
-                if (msk[i][j])
-                    test[i][j]=1;
-                else
-                test[i][j]=0;
-        DataPositions poz = new DataPositions(mask);
-        int i = 0;
-        do {
-            i++;
-            test[poz.i()][poz.j()] = 1;
-            System.out.println(" I: "+ poz.i() + " J: "+ poz.j());
-        } while (poz.next());
+//        boolean[][] msk = mask.getMask();
+//        int[][] test=new int[msk.length][msk.length];
+//        for (int i=0; i< msk.length;i++)
+//            for (int j=0;j< msk.length;j++)
+//                if (msk[i][j])
+//                    test[i][j]=1;
+//                else
+//                test[i][j]=0;
+//        DataPositions poz = new DataPositions(mask);
+//        int i = 0;
+//        do {
+//            i++;
+//            test[poz.i()][poz.j()] = 1;
+//            System.out.println(" I: "+ poz.i() + " J: "+ poz.j());
+//        } while (poz.next());
+//        byte[] data1 = {7, 17, 17, 17, 17, 17, 71,7, 7, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1};
+//        System.out.println(20/3);
+//
+//        DataBlock[] deinterleave = DataDestructurer.deinterleave(data1, new ErrorCorrectionInformation(4, new ErrorCorrectionGroup(2, 2)));
+//        byte[] test=DataDestructurer.join(deinterleave,new ErrorCorrectionInformation(4, new ErrorCorrectionGroup(2, 2)));
+//        System.out.println();
 
-        System.out.println();
 //        MaskPattern maskPattern =MASK100 ;
 //         maskPattern.maskFunction();
 //

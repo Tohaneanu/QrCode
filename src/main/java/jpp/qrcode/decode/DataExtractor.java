@@ -11,10 +11,19 @@ public class DataExtractor {
         byte[] bytes = new byte[byteCount];
         DataPositions dataPositions = new DataPositions(mask);
         int i = 0;
+        int bit = 0;
+        int count = 0;
         do {
             if (i == byteCount) break;
-            bytes[i] = (byte) (data[dataPositions.i()][dataPositions.j()] ? 1 : 0);
-            i++;
+            if (count < 8) {
+                bit += data[dataPositions.i()][dataPositions.j()] ? 1 : 0 * Math.pow(2, count++);
+            } else {
+                bytes[i] = (byte) bit;
+                i++;
+                bit = data[dataPositions.i()][dataPositions.j()] ? 1 : 0;
+                count = 1;
+            }
+
         } while (dataPositions.next());
 
         return bytes;

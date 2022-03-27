@@ -151,7 +151,7 @@ public class QRCode {
         return vrs;
     }
 
-    private static FormatInformation getFormatInformation(boolean[][] data) {
+    public static FormatInformation getFormatInformation(boolean[][] data) {
         int inf1 = 0;
         int j = 14;
         for (int i = 0; i < 6; i++) {

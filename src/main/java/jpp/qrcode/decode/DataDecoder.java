@@ -24,10 +24,9 @@ public class DataDecoder {
     }
 
     public static String decodeToString(byte[] bytes, Version version, ErrorCorrection errorCorrection) {
-        if (version.totalByteCount())
+        if (version.correctionInformationFor(errorCorrection).totalDataByteCount() != bytes.length)
             throw new IllegalArgumentException("The number of bytes of this version does not match the error correction level");
-        String text="";
-
-        return text;
+     Encoding encoding=readEncoding(bytes); ///aici nu se stie ce trebuie
+        return new String(bytes);
     }
 }

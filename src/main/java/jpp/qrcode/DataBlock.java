@@ -9,6 +9,7 @@ public class DataBlock {
         this.correctionByte = correctionBytes;
     }
 
+
     public byte[] dataBytes() {
         return this.dataByte;
     }
