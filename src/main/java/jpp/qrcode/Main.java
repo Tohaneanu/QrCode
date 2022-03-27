@@ -1,6 +1,7 @@
 package jpp.qrcode;
 
 import jpp.qrcode.decode.DataDestructurer;
+import jpp.qrcode.encode.DataStructurer;
 import jpp.qrcode.io.TextReader;
 
 import java.io.File;
@@ -15,8 +16,8 @@ import static jpp.qrcode.ReservedModulesMask.forVersion;
 
 public class Main {
     public static void main(String[] args) throws IllegalAccessException {
-        Encoding encoding = Encoding.fromBits(2);
-        System.out.println(encoding);
+//        Encoding encoding = Encoding.fromBits(2);
+//        System.out.println(encoding);
 //        int[][] data = {
 //                {1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1},
 //                {1, 0, 0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1},
@@ -55,17 +56,17 @@ public class Main {
 //        ReservedModulesMask mask = forVersion(vrs);
 
 
-        boolean[][] data = new boolean[0][];
-        File file = new File("C:/Users/User/Desktop/qrcode/examples/WueCampus_H.txt");
-
-        try (InputStream in = new FileInputStream(file)) {
-            data = TextReader.read(in);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        QRCode validatedFromBooleans = createValidatedFromBooleans(data);
-        ReservedModulesMask mask = forVersion(VersionInformation.fromBits(31892));
+//        boolean[][] data = new boolean[0][];
+//        File file = new File("C:/Users/User/Desktop/qrcode/examples/WueCampus_H.txt");
+//
+//        try (InputStream in = new FileInputStream(file)) {
+//            data = TextReader.read(in);
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        QRCode validatedFromBooleans = createValidatedFromBooleans(data);
+//        ReservedModulesMask mask = forVersion(VersionInformation.fromBits(31892));
 //        boolean[][] msk = mask.getMask();
 //        int[][] test=new int[msk.length][msk.length];
 //        for (int i=0; i< msk.length;i++)
@@ -92,5 +93,18 @@ public class Main {
 //         maskPattern.maskFunction();
 //
 //       MaskApplier.applyTo(data, maskPattern.maskFunction(), new ReservedModulesMask(data));
+
+        byte[] test = new byte[]{43, 82, 24, 86, 56, -58, -14, 7, 46, 86, 57, 26, 52, -30, 22, 2, -46, 2, 24, 76, 56, -26, 57, 26, 16, -62, 5, 15, 24, 36, -10, 46, 92, -30, 5, 96, -9, 52, 6, 17, 26, 52, 6, 12, 7, 37, 17, 56, 17, 26, 52, 6, -10, -26, 52, -30, 20, -20, 11, -20, 11, 12};
+        DataBlock[] testBlock = DataStructurer.split(test, new ErrorCorrectionInformation(18, new ErrorCorrectionGroup[]{new ErrorCorrectionGroup(4, test.length)}));
+
+        for (int i = 0; i < testBlock.length; ++i) {
+            byte[] dataBytes = testBlock[i].dataBytes();
+
+            for (int j = 0; j < dataBytes.length; ++j) {
+                System.out.print(dataBytes[j] + " ");
+            }
+
+            System.out.println();
+        }
     }
 }
