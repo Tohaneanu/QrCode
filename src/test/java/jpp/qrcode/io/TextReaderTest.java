@@ -1,5 +1,6 @@
 package jpp.qrcode.io;
 
+import jpp.qrcode.QRCode;
 import junit.framework.TestCase;
 
 import java.io.File;

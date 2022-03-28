@@ -52,6 +52,10 @@ public class QRCode {
         if (data == null || data.length == 0 || data.length != data[0].length) {
             throw new InvalidQRCodeException("Matrix is null or empty or not quadratic!");
         }
+        for (boolean[] datum : data) {
+            if (data.length != datum.length) throw new InvalidQRCodeException("Matrix is not square!");
+        }
+
         boolean a = false;
         int version = 0;
         for (int i = 1; i <= 40; i++) {
@@ -64,6 +68,7 @@ public class QRCode {
         if (!a) {
             throw new InvalidQRCodeException("Matrix size does not match a valid qr code size");
         }
+        boolean allCorners = true;
         for (int i = 0; i < 7; i++) {
             if (!data[0][i] || !data[6][i] || !data[i][0] || !data[i][6])
                 throw new InvalidQRCodeException("Top left orientation pattern is wrong");
@@ -71,6 +76,10 @@ public class QRCode {
                 throw new InvalidQRCodeException("Top right orientation pattern is wrong");
             if (!data[data.length - 1][i] || !data[data.length - 7][i] || !data[data.length - 1 - i][0] || !data[data.length - 1 - i][6])
                 throw new InvalidQRCodeException("Lower left orientation pattern is wrong");
+
+            //check if is orientation pattern in lower right corner
+            if (!data[data.length - 1][data.length - 7 + i] || !data[data.length - 7][data.length - 7 + i] || !data[data.length - 7 + i][data.length - 7] || !data[data.length - 7 + i][data.length - 1])
+                allCorners = false;
         }
         for (int i = 1; i < 6; i++) {
             if (data[1][i] || data[5][i] || data[i][1] || data[i][5])
@@ -79,6 +88,9 @@ public class QRCode {
                 throw new InvalidQRCodeException("Top right orientation pattern is wrong");
             if (data[data.length - 2][i] || data[data.length - 6][i] || data[data.length - 1 - i][1] || data[data.length - 1 - i][5])
                 throw new InvalidQRCodeException("Lower left orientation pattern is wrong");
+            //check if is orientation pattern in lower right corner
+            if (data[data.length - 2][data.length - 7 + i] || data[data.length - 6][data.length - 7 + i] || data[data.length - 7 + i][data.length - 6] || data[data.length - 7 + i][data.length - 2])
+                allCorners = false;
         }
         for (int i = 2; i < 5; i++) {
             for (int j = 2; j < 5; j++) {
@@ -87,9 +99,13 @@ public class QRCode {
                     throw new InvalidQRCodeException("Top right orientation pattern is wrong");
                 if (!data[data.length - 1 - j][i])
                     throw new InvalidQRCodeException("Lower left orientation pattern is wrong");
-
+                //check if is orientation pattern in lower right corner
+                if (!data[data.length - 1 - i][data.length - 1 - j]) allCorners = false;
             }
         }
+        if (allCorners) throw new InvalidQRCodeException("ALL Corners!");
+
+
         for (int i = 0; i < 8; i++) {
             if (data[7][i] || data[i][7]) throw new InvalidQRCodeException("Top left separators are wrong");
             if (data[7][data.length - 1 - i] || data[i][data.length - 8])
@@ -110,6 +126,33 @@ public class QRCode {
         if (!data[data.length - 8][8]) throw new InvalidQRCodeException("The dark module is white");
         //version information
         Version vrs = getVersion(data, version);
+//Alignment
+        if (version < 7 && vrs == null) vrs = Version.fromNumber(version);
+        else if (version > 6 && vrs == null) throw new InvalidQRCodeException("Version is corrupted");
+        int[] alignmentPositions = vrs.alignmentPositions();
+        if (alignmentPositions.length > 0) for (int alignmentPosition : alignmentPositions) {
+            for (int position : alignmentPositions) {
+                if ((alignmentPosition == alignmentPositions[0] && position == alignmentPositions[0]) || (alignmentPosition == alignmentPositions[0] && position == alignmentPositions[alignmentPositions.length - 1]) || (alignmentPosition == alignmentPositions[alignmentPositions.length - 1] && position == alignmentPositions[0]))
+                    continue;
+                if (!data[alignmentPosition][position])
+                    //center of alignment models
+                    throw new InvalidQRCodeException("Alignment position! Center is wrong..");
+                //top and bottom contour
+                for (int k = 0; k < 5; k++) {
+                    if (!data[alignmentPosition - 2][position - 2 + k] || !data[alignmentPosition + 2][position - 2 + k]) {
+                        throw new InvalidQRCodeException("Alignment position! top or bottom contour is wrong..");
+                    }
+
+                }
+                //left and right contour
+                for (int k = 0; k < 3; k++) {
+                    if (!data[alignmentPosition - 1 + k][position - 2] || !data[alignmentPosition - 1 + k][position + 2])
+                        throw new InvalidQRCodeException("Alignment position! left or right contour is wrong..");
+                }
+
+            }
+        }
+
 
         // make format information blocks
         FormatInformation formatInformation = getFormatInformation(data);
@@ -138,10 +181,10 @@ public class QRCode {
                 }
             }
             int vrs1 = 0;
-            try {
-                vrs1 = VersionInformation.forVersion(VersionInformation.fromBits(inf1));
-            } catch (IllegalStateException ignored) {
-            }
+
+            Version aux = VersionInformation.fromBits(inf1);
+            if (aux != null) vrs1 = aux.number();
+
             if (vrs1 == version) vrs = VersionInformation.fromBits(inf1);
             else {
                 vrs = VersionInformation.fromBits(inf2);

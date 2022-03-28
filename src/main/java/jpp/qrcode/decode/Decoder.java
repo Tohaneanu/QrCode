@@ -8,7 +8,7 @@ public class Decoder {
         boolean[][] data = qrCode.data();
         ReservedModulesMask reservedModulesMask = ReservedModulesMask.forVersion(qrCode.version());
         MaskApplier.applyTo(data, qrCode.maskPattern().maskFunction(), reservedModulesMask);
-        Version version = VersionInformation.fromBits(data.length * data.length);
+        Version version =Version.fromNumber((data.length-17)/4);
         byte[] extract = DataExtractor.extract(data, reservedModulesMask, version.totalByteCount());
         ErrorCorrection errorCorrection = QRCode.getFormatInformation(data).errorCorrection();
         ErrorCorrectionInformation errorCorrectionInformation = version.correctionInformationFor(errorCorrection);
