@@ -58,15 +58,20 @@ public class DataPositions {
                             j++;
                         }
                     } else if (i == 7) {
-                        right = true;
-                        i = i - 2;
-                        j++;
+                        if (mask.isReserved(i - 1, j + 1) && mask.isReserved(i - 2, j + 1))
+                            i -= 2;
+                        else {
+                            right = true;
+                            i = i - 2;
+                            j++;
+                        }
+
                     } else if (mask.isReserved(i - 1, j + 1) && mask.isReserved(i - 1, j)) {
                         right = true;
                         i = i - 6;
                         j++;
                     } else if (mask.isReserved(i - 1, j + 1) && !mask.isReserved(i - 1, j)) {
-                        right=false;
+                        right = false;
                         i--;
 
                     } else {
@@ -115,19 +120,30 @@ public class DataPositions {
                     j--;
                     right = false;
                 } else {
-                    if (mask.isReserved(i + 1, j + 1) && mask.isReserved(i + 1, j)) {
-                        i += 5;
+                    if (mask.isReserved(i + 1, j + 1) && mask.isReserved(i + 1, j) && i + 1 != 6) {
+                        i += 6;
+                        j++;
+                        right = true;
                     } else if (i == 5) {
+                        if (mask.isReserved(i+2,j+1)){
+                            i+=2;
+                        }
+                        else{
                         i += 2;
+                        j++;
+                        right = true;}
+                    } else if (mask.isReserved(i + 1, j + 1) && !mask.isReserved(i + 1, j)) {
+                        i++;
                     } else {
                         i++;
+                        j++;
+                        right = true;
                     }
-                    j++;
-                    right = true;
+
                 }
             }
         }
 
-            return true;
+        return true;
     }
 }
