@@ -2,7 +2,6 @@ package jpp.qrcode.encode;
 
 import jpp.qrcode.*;
 
-import java.text.Format;
 
 public class MaskSelector {
     public static void placeFormatInformation(boolean[][] res, int formatInformation) {
@@ -89,19 +88,18 @@ public class MaskSelector {
         return penalty;
     }
 
-    private static int blackWhitePattern(String str, String pattern){
+    private static int blackWhitePattern(String str, String pattern) {
         int index;
         int penalty = 0;
-        do{
-            if(pattern.length() > str.length())
-                break;
+        do {
+            if (pattern.length() > str.length()) break;
 
             index = str.indexOf(pattern);
-            if(index != -1) {
+            if (index != -1) {
                 penalty += 40;
                 str = str.substring(index + pattern.length());
             }
-        } while(index != -1);
+        } while (index != -1);
 
         return penalty;
     }
@@ -110,7 +108,7 @@ public class MaskSelector {
         int arrSize = arr.length;
         int penalty = 0;
 
-        String[] patterns = { "00001011101", "10111010000" };
+        String[] patterns = {"00001011101", "10111010000"};
 
         String[] qrV = new String[arrSize];
         String[] qrH = new String[arrSize];

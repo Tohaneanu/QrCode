@@ -1,21 +1,16 @@
 package jpp.qrcode;
 
-import jpp.qrcode.decode.DataDestructurer;
-import jpp.qrcode.encode.DataStructurer;
+import jpp.qrcode.decode.Decoder;
+import jpp.qrcode.encode.Encoder;
 import jpp.qrcode.io.TextReader;
+import jpp.qrcode.reedsolomon.ReedSolomonException;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
-import java.lang.reflect.Array;
-
-import static jpp.qrcode.MaskPattern.MASK100;
-import static jpp.qrcode.QRCode.createValidatedFromBooleans;
-
-import static jpp.qrcode.ReservedModulesMask.forVersion;
 
 public class Main {
-    public static void main(String[] args) throws IllegalAccessException {
+    public static void main(String[] args) throws IllegalAccessException, ReedSolomonException {
 //        Encoding encoding = Encoding.fromBits(2);
 //        System.out.println(encoding);
 //        int[][] data = {
@@ -93,18 +88,67 @@ public class Main {
 //         maskPattern.maskFunction();
 //
 //       MaskApplier.applyTo(data, maskPattern.maskFunction(), new ReservedModulesMask(data));
+//
+//        byte[] test = new byte[]{43, 82, 24, 86, 56, -58, -14, 7, 46, 86, 57, 26, 52, -30, 22, 2, -46, 2, 24, 76, 56, -26, 57, 26, 16, -62, 5, 15, 24, 36, -10, 46, 92, -30, 5, 96, -9, 52, 6, 17, 26, 52, 6, 12, 7, 37, 17, 56, 17, 26, 52, 6, -10, -26, 52, -30, 20, -20, 11, -20, 11, 12};
+//        DataBlock[] testBlock = DataStructurer.split(test, new ErrorCorrectionInformation(18, new ErrorCorrectionGroup[]{new ErrorCorrectionGroup(4, test.length)}));
+//
+//        for (int i = 0; i < testBlock.length; ++i) {
+//            byte[] dataBytes = testBlock[i].dataBytes();
+//
+//            for (int j = 0; j < dataBytes.length; ++j) {
+//                System.out.print(dataBytes[j] + " ");
+//            }
+//
+//            System.out.println();
+//        }
+//        File f = new File("C:/Users/User/Desktop/qrcode/examples/invalid");
+//
+//        FilenameFilter textFilter = new FilenameFilter() {
+//            public boolean accept(File dir, String name) {
+//                return name.endsWith(".txt");
+//            }
+//        };
+//        File[] invalids = f.listFiles(textFilter);
+//        boolean[][] invalidData = new boolean[0][];
+//        for (int i = 0; i < invalids.length; i++) {
+//            try (InputStream in = new FileInputStream(invalids[i])) {
+//                invalidData = TextReader.read(in);
+//                boolean[][] finalInvalidData = invalidData;
+//                System.out.println(i+"\n");
+//                QRCode qrCode = createValidatedFromBooleans(invalidData);
+//                System.out.println("\n");
+//
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        }
+//        boolean[][] data = new boolean[0][];
+//        File file = new File("C:/Users/User/Desktop/qrcode/examples/Hallo_Q.txt");
+//
+//        try (InputStream in = new FileInputStream(file)) {
+//            data = TextReader.read(in);
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        QRCode qrCode = QRCode.createValidatedFromBooleans(data);
+//        System.out.println(qrCode.matrixToString());;
 
-        byte[] test = new byte[]{43, 82, 24, 86, 56, -58, -14, 7, 46, 86, 57, 26, 52, -30, 22, 2, -46, 2, 24, 76, 56, -26, 57, 26, 16, -62, 5, 15, 24, 36, -10, 46, 92, -30, 5, 96, -9, 52, 6, 17, 26, 52, 6, 12, 7, 37, 17, 56, 17, 26, 52, 6, -10, -26, 52, -30, 20, -20, 11, -20, 11, 12};
-        DataBlock[] testBlock = DataStructurer.split(test, new ErrorCorrectionInformation(18, new ErrorCorrectionGroup[]{new ErrorCorrectionGroup(4, test.length)}));
 
-        for (int i = 0; i < testBlock.length; ++i) {
-            byte[] dataBytes = testBlock[i].dataBytes();
+//        QRCode qrCode = Encoder.createFromString("Hallo", ErrorCorrection.HIGH);
+//        qrCode.matrixToString();
+//        boolean[][] data = new boolean[0][];
+//        File file = new File("C:/Users/User/Desktop/qrcode/examples/Hallo_Q.txt");
+//
+//        try (InputStream in = new FileInputStream(file)) {
+//            data = TextReader.read(in);
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        QRCode validatedFromBooleans = QRCode.createValidatedFromBooleans(data);
+//        System.out.println(Decoder.decodeToString(validatedFromBooleans));
 
-            for (int j = 0; j < dataBytes.length; ++j) {
-                System.out.print(dataBytes[j] + " ");
-            }
 
-            System.out.println();
-        }
     }
 }

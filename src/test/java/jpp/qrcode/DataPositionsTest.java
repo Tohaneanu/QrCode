@@ -14,7 +14,5 @@ public class DataPositionsTest extends TestCase {
         do {
             ints[dataPositions.i()][dataPositions.j()]=1;
         }while (dataPositions.next());
-        int[] ints2 = version.alignmentPositions();
-        System.out.println();
     }
 }
