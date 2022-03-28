@@ -60,17 +60,17 @@ public class DataStructurer {
         byte[] result = new byte[totalBytes];
         int minLen = dataBytes[0].length;
 
-        for(int i = 0; i < minLen; ++i) {
-            for(int j = 0; j < totalBlockCount; ++j) {
+        for(int i = 0; i < minLen; i++) {
+            for(int j = 0; j < totalBlockCount; j++) {
                 result[resultIndex] = dataBytes[j][i];
-                ++resultIndex;
+                resultIndex++;
             }
         }
 
-        int rest = totalBlockCount - resultIndex;
+        int rest = ecBlocks.lowerDataByteCount() - resultIndex;
         for(int i = totalBlockCount -  rest; i < totalBlockCount; i++){
-            result[resultIndex] = dataBytes[i][minLen + 1];
-            ++resultIndex;
+            result[resultIndex] = dataBytes[i][minLen];
+            resultIndex++;
         }
 
         return result;

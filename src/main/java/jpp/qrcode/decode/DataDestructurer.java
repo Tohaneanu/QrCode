@@ -61,7 +61,7 @@ public class DataDestructurer {
     }
 
     public static byte[] destructure(byte[] data, ErrorCorrectionInformation ecBlocks) throws ReedSolomonException {
-        if (data.length == ecBlocks.totalDataByteCount()) {
+        if (data.length == ecBlocks.totalByteCount()) {
             DataBlock[] dataBlocks = deinterleave(data, ecBlocks);
             return join(dataBlocks, ecBlocks);
         } else throw new IllegalArgumentException("Lengths does not match");

@@ -89,42 +89,48 @@ public class MaskSelector {
         return penalty;
     }
 
+    private static int blackWhitePattern(String str, String pattern){
+        int index;
+        int penalty = 0;
+        do{
+            if(pattern.length() > str.length())
+                break;
+
+            index = str.indexOf(pattern);
+            if(index != -1) {
+                penalty += 40;
+                str = str.substring(index + pattern.length());
+            }
+        } while(index != -1);
+
+        return penalty;
+    }
+
     public static int calculatePenaltyBlackWhite(boolean[][] arr) {
         int arrSize = arr.length;
         int penalty = 0;
 
-        String[] patterns = {"00001011101", "10111010000"};
+        String[] patterns = { "00001011101", "10111010000" };
 
         String[] qrV = new String[arrSize];
         String[] qrH = new String[arrSize];
 
         for (int i = 0; i < arrSize; i++) {
             for (int j = 0; j < arrSize; j++) {
-                qrV[i] += (char) (!arr[i][j] ? '0' : '1');
-                qrH[i] += (char) (!arr[i][j] ? '0' : '1');
+                qrV[i] += (char) (arr[i][j] == true ? '1' : '0');
+                qrH[i] += (char) (arr[j][i] == true ? '1' : '0');
             }
         }
 
         for (int i = 0; i < arrSize; i++) {
-            if (qrV[i].contains(patterns[0])) {
-                penalty += 40;
+            for (int j = 0; j < 2; j++) {
+                penalty += blackWhitePattern(qrH[i], patterns[j]);
+                penalty += blackWhitePattern(qrV[i], patterns[j]);
             }
-
-            if (qrV[i].contains(patterns[1])) {
-                penalty += 40;
-            }
-
-            if (qrH[i].contains(patterns[0])) {
-                penalty += 40;
-            }
-
-            if (qrH[i].contains(patterns[1])) {
-                penalty += 40;
-            }
-
         }
 
         return penalty;
+
     }
 
     public static int calculatePenaltyPattern(boolean[][] array) {

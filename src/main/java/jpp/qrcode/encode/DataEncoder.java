@@ -15,7 +15,7 @@ public final class DataEncoder {
 			int dec = 0;
 			if(ByteLen < 8) {
 				while(ByteLen < 8) {
-					strByte = '0' + strByte;
+					strByte = "0" + strByte;
 					ByteLen++;
 				}
 			}
@@ -28,6 +28,6 @@ public final class DataEncoder {
 			k++;
 		}
 
-		return new DataEncoderResult(bytes, Version.forDataBytesCount(bytes.length, level) );
+		return new DataEncoderResult(bytes, Version.forDataBytesCount(bytes.length, level));
 	}
 }
