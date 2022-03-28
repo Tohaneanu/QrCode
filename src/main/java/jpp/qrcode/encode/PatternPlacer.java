@@ -3,6 +3,8 @@ package jpp.qrcode.encode;
 import jpp.qrcode.Version;
 import jpp.qrcode.VersionInformation;
 
+import java.util.Arrays;
+
 public class PatternPlacer {
     public static void placeOrientation(boolean[][] res, Version version) {
         for (int i = 0; i < 7; i++) {
@@ -43,46 +45,56 @@ public class PatternPlacer {
         int[] alignmentPositions = version.alignmentPositions();
         for (int alignmentPosition : alignmentPositions) {
             for (int position : alignmentPositions) {
-                if (!res[alignmentPosition][position]) {
-                    //center of alignment models
-                    res[alignmentPosition][position] = true;
-                    //top and bottom contour
-                    for (int k = 0; k < 5; k++) {
-                        res[alignmentPosition - 2][position - 2 + k] = true;
-                        res[alignmentPosition + 2][position - 2 + k] = true;
-                    }
-                    //left and right contour
-                    for (int k = 0; k < 3; k++) {
-                        res[alignmentPosition - 1 + k][position - 2] = true;
-                        res[alignmentPosition - 1 + k][position + 2] = true;
-                    }
+                if ((alignmentPosition == alignmentPositions[0] && position == alignmentPositions[0]) || (alignmentPosition == alignmentPositions[0] && position == alignmentPositions[alignmentPositions.length - 1]) || (alignmentPosition == alignmentPositions[alignmentPositions.length - 1] && position == alignmentPositions[0]))
+                    continue;
+                //center of alignment models
+                res[alignmentPosition][position] = true;
+                //top and bottom contour
+                for (int k = 0; k < 5; k++) {
+                    res[alignmentPosition - 2][position - 2 + k] = true;
+                    res[alignmentPosition + 2][position - 2 + k] = true;
+                }
+                //left and right contour
+                for (int k = 0; k < 3; k++) {
+                    res[alignmentPosition - 1 + k][position - 2] = true;
+                    res[alignmentPosition - 1 + k][position + 2] = true;
                 }
             }
+
         }
     }
 
     public static void placeVersionInformation(boolean[][] data, int versionInformation) {
         String binary = Integer.toBinaryString(versionInformation);
-
-        for (int index = 0; index < binary.length(); index++) {
-            for (int i = 0; i < 6; i++) {
-                for (int j = 0; j < 3; j++)
-                    data[data.length - 9 - j][5 - i] = (int) binary.charAt(index) == 1;
-            }
-            for (int i = 0; i < 6; i++) {
-                for (int j = 0; j < 3; j++)
-                    data[5 - i][data.length - 9 - j] =(int) binary.charAt(index) == 1;
+        while (binary.length() < 18) {
+            binary = "0" + binary;
+        }
+        int index = 0;
+        for (int i = 0; i < 6; i++) {
+            for (int j = 0; j < 3; j++) {
+                data[data.length - 9 - j][5 - i] = (int) binary.charAt(index++) == '1';
             }
         }
+        index = 0;
+        for (int i = 5; i > -1; i--) {
+            for (int j = 0; j < 3; j++)
+                data[i][data.length - 9 - j] = (int) binary.charAt(index++) == '1';
+        }
+
     }
 
     public static boolean[][] createBlankForVersion(Version version) {
-        boolean[][] data=new boolean[version.size()][version.size()];
-        placeOrientation(data,version);
-        placeTiming(data,version);
-        placeOrientation(data,version);
+        boolean[][] data = new boolean[version.size()][version.size()];
+        placeOrientation(data, version);
+        placeTiming(data, version);
+        placeAlignment(data, version);
+        placeOrientation(data, version);
         data[data.length - 8][8] = true;
-        placeVersionInformation(data, VersionInformation.forVersion(version));
+        if (version.number() > 6) {
+            placeVersionInformation(data, VersionInformation.forVersion(version));
+            System.out.println(VersionInformation.forVersion(version));
+            System.out.println(Arrays.toString(version.alignmentPositions()));
+        }
         return data;
     }
 }
