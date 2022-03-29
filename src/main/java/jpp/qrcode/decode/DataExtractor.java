@@ -13,14 +13,17 @@ public class DataExtractor {
         int i = 0;
         int bit = 0;
         int count = 0;
+        int nr=0;
         do {
             if (i == byteCount) break;
             if (count < 8) {
-                bit += data[dataPositions.i()][dataPositions.j()] ? 1 : 0 * Math.pow(2, count++);
+                nr= data[dataPositions.i()][dataPositions.j()] ? 1 : 0;
+                bit +=  nr * Math.pow(2, count++);
             } else {
                 bytes[i] = (byte) bit;
                 i++;
-                bit = data[dataPositions.i()][dataPositions.j()] ? 1 : 0;
+                nr=data[dataPositions.i()][dataPositions.j()] ? 1 : 0;
+                bit = nr;
                 count = 1;
             }
 

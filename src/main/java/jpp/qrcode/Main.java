@@ -137,18 +137,17 @@ public class Main {
 
 //        QRCode qrCode = Encoder.createFromString("Hallo", ErrorCorrection.HIGH);
 //        qrCode.matrixToString();
-//        boolean[][] data = new boolean[0][];
-//        File file = new File("C:/Users/User/Desktop/qrcode/examples/Hallo_Q.txt");
-//
-//        try (InputStream in = new FileInputStream(file)) {
-//            data = TextReader.read(in);
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        QRCode validatedFromBooleans = QRCode.createValidatedFromBooleans(data);
-//        System.out.println(Decoder.decodeToString(validatedFromBooleans));
+        boolean[][] data = new boolean[0][];
+        File file = new File("C:/Users/User/Desktop/qrcode/examples/WueCampus_H.txt");
 
+        try (InputStream in = new FileInputStream(file)) {
+            data = TextReader.read(in);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        QRCode validatedFromBooleans = QRCode.createValidatedFromBooleans(data);
+        System.out.println(Decoder.decodeToString(validatedFromBooleans));
 
     }
 }

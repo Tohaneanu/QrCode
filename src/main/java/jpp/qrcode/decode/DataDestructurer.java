@@ -18,7 +18,7 @@ public class DataDestructurer {
                 }
                 limit = correctionBytes.length;
             } catch (ReedSolomonException e) {
-                throw new QRDecodeException("Data correction failed", e.getCause());
+                throw new QRDecodeException("Data correction failed " +e.toString(), e.getCause());
             }
 
         }
