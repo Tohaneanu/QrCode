@@ -50,7 +50,7 @@ public class DataDestructurer {
         for (int dataIndex = finalOfErrorCorrection, increment = 0; dataIndex < finalOfErrorCorrection + rest; dataIndex++) {
             dataBlocks[dataBlocks.length - 1 - increment++].dataBytes()[dataBytes] = data[dataIndex];
         }
-        for (int dataIndex = finalOfErrorCorrection + rest, blockDecrement = blockNr - 1; dataIndex < data.length; dataIndex++) {
+        for (int dataIndex = finalOfErrorCorrection + rest-1, blockDecrement = blockNr - 1; dataIndex < data.length; dataIndex++) {
             if (blockDecrement > -1) dataBlocks[blockDecrement--].dataBytes()[dataBytes - 1] = data[dataIndex];
             else {
                 blockDecrement = blockNr - 1;
