@@ -1,22 +1,18 @@
 package jpp.qrcode;
 
-import jpp.qrcode.decode.DataDestructurer;
-import jpp.qrcode.encode.DataStructurer;
+import jpp.qrcode.decode.Decoder;
 import jpp.qrcode.encode.Encoder;
 import jpp.qrcode.io.TextReader;
+import jpp.qrcode.reedsolomon.ReedSolomonException;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
-import java.lang.reflect.Array;
 
-import static jpp.qrcode.MaskPattern.MASK100;
 import static jpp.qrcode.QRCode.createValidatedFromBooleans;
 
-import static jpp.qrcode.ReservedModulesMask.forVersion;
-
 public class Main {
-    public static void main(String[] args) throws IllegalAccessException {
+    public static void main(String[] args) throws IllegalAccessException, ReedSolomonException {
 //        Encoding encoding = Encoding.fromBits(2);
 //        System.out.println(encoding);
 //        int[][] data = {
@@ -107,19 +103,19 @@ public class Main {
 //
 //            System.out.println();
 //        }
-
-        QRCode qrCode = Encoder.createFromString("Hallo", ErrorCorrection.HIGH);
-        System.out.println("\n" + qrCode.matrixToString());
-
-//        boolean[][] data = new boolean[0][];
-//        File file = new File("C:\\Users\\grecu\\IdeaProjects\\QrCode\\examples\\Hallo_H.txt");
 //
-//        try (InputStream in = new FileInputStream(file)) {
-//            data = TextReader.read(in);
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
+//        QRCode qrCode = Encoder.createFromString("Hallo", ErrorCorrection.HIGH);
+//        System.out.println("\n" + qrCode.matrixToString());
 
+        boolean[][] data = new boolean[0][];
+        File file = new File("C:/Users/User/Desktop/qrcode/examples/Hallo_H.txt");
+
+        try (InputStream in = new FileInputStream(file)) {
+            data = TextReader.read(in);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Decoder.decodeToString(createValidatedFromBooleans(data));
     }
 }

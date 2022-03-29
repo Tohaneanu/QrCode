@@ -18,7 +18,7 @@ public class DataDestructurer {
                 }
                 limit = correctionBytes.length;
             } catch (ReedSolomonException e) {
-                throw new QRDecodeException("Data correction failed " +e.toString(), e.getCause());
+                throw new QRDecodeException("Data correction failed " + e.toString(), e.getCause());
             }
 
         }
@@ -30,12 +30,12 @@ public class DataDestructurer {
         DataBlock[] dataBlocks = new DataBlock[blockNr];
         int ecBytes = errorCorrectionInformation.correctionBytesPerBlock();
         int rest = data.length % blockNr;
-        int dataBytes = data.length / blockNr;
+        int dataBytes =errorCorrectionInformation.lowerDataByteCount();
         for (int i = 0; i < dataBlocks.length - rest; i++) {
-            dataBlocks[i] = new DataBlock(new byte[dataBytes], new byte[ecBytes]);
+            dataBlocks[i] = new DataBlock(new byte[errorCorrectionInformation.lowerDataByteCount()], new byte[ecBytes]);
         }
         for (int i = dataBlocks.length - rest; i < dataBlocks.length; i++) {
-            dataBlocks[i] = new DataBlock(new byte[dataBytes + 1], new byte[ecBytes]);
+            dataBlocks[i] = new DataBlock(new byte[errorCorrectionInformation.lowerDataByteCount() + 1], new byte[ecBytes]);
         }
         int finalOfErrorCorrection = ecBytes * blockNr;
         for (int dataIndex = 0, blockNumber = blockNr - 1, resultIndex = 0; dataIndex < finalOfErrorCorrection; dataIndex++) {

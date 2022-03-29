@@ -15,7 +15,7 @@ public class DataExtractor {
         int count = 0;
         int nr=0;
         do {
-            if (i == byteCount) break;
+            if (i == byteCount+1) break;
             if (count < 8) {
                 nr= data[dataPositions.i()][dataPositions.j()] ? 1 : 0;
                 bit +=  nr * Math.pow(2, count++);
