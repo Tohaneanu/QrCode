@@ -1,11 +1,16 @@
 package jpp.qrcode.encode;
 
+import com.sun.jdi.AbsentInformationException;
 import jpp.qrcode.*;
 
 
 public class MaskSelector {
     public static void placeFormatInformation(boolean[][] res, int formatInformation) {
         String binary = Integer.toBinaryString(formatInformation);
+
+        while (binary.length() < 15)
+            binary = '0' + binary;
+
         for (int i = 0; i < 6; i++) {
             res[8][i] = (int) binary.charAt(i) == 1;
         }
@@ -71,6 +76,9 @@ public class MaskSelector {
             }
         }
 
+
+
+        System.out.print(penalty + " ");
         return penalty;
     }
 
@@ -80,11 +88,15 @@ public class MaskSelector {
 
         for (int i = 0; i < arrSize; i++) {
             for (int j = 0; j < arrSize; j++) {
-                if (arr[i][j] == arr[i][j])
-                    if (arr[i][j + 1] == arr[i][j]) if (arr[i + 1][j + 1] == arr[i][j]) penalty += 3;
+                if(i + 1 < arrSize && j + 1 < arrSize)
+                    if (arr[i][j] == arr[i][j])
+                        if (arr[i][j + 1] == arr[i][j])
+                            if (arr[i + 1][j + 1] == arr[i][j]) penalty += 3;
             }
         }
 
+
+        System.out.print(penalty + " ");
         return penalty;
     }
 
@@ -127,6 +139,9 @@ public class MaskSelector {
             }
         }
 
+
+
+        System.out.print(penalty + " ");
         return penalty;
 
     }
@@ -142,6 +157,8 @@ public class MaskSelector {
             }
         }
 
+
+        System.out.print(10 * (Math.abs(2 * darkModules - modules) * 10 / modules) + " ");
         return 10 * (Math.abs(2 * darkModules - modules) * 10 / modules);
     }
 
@@ -155,8 +172,12 @@ public class MaskSelector {
         int comp = Integer.MAX_VALUE;
         MaskPattern mask = MaskPattern.MASK000;
         for (MaskPattern maskPattern : maskPatterns) {
-            MaskApplier.applyTo(data, maskPattern.maskFunction(), modulesMask);
-            int i = calculatePenaltyFor(data);
+            boolean[][] copy = data.clone();
+            MaskApplier.applyTo(copy, maskPattern.maskFunction(), modulesMask);
+
+            System.out.println("\n" + maskPattern);
+
+            int i = calculatePenaltyFor(copy);
             if (i < comp) {
                 comp = i;
                 mask = maskPattern;
