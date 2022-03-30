@@ -6,11 +6,12 @@ import jpp.qrcode.Version;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 public final class DataEncoder {
 	public static DataEncoderResult encodeForCorrectionLevel(String str, ErrorCorrection level) {
-		Charset utf8charset = Charset.forName("UTF-8");
-		Charset iso88591charset = Charset.forName("ISO-8859-1");
+		Charset utf8charset = StandardCharsets.UTF_8;
+		Charset iso88591charset = StandardCharsets.ISO_8859_1;
 
 		ByteBuffer inputBuffer = ByteBuffer.wrap(str.getBytes(utf8charset));
 
@@ -39,7 +40,8 @@ public final class DataEncoder {
 		if(rest != 0){
 			for(int i = outputData.length; i < outputData.length + 8 - rest; i++)
 				result[i] = 0;
-		}
+		}else
+			rest=8;
 
 
 

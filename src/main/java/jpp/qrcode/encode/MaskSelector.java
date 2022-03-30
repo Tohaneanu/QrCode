@@ -173,6 +173,8 @@ public class MaskSelector {
         MaskPattern mask = MaskPattern.MASK000;
         for (MaskPattern maskPattern : maskPatterns) {
             boolean[][] copy = data.clone();
+            FormatInformation formatInformation = FormatInformation.get(correction, mask);
+            placeFormatInformation(copy, formatInformation.formatInfo());
             MaskApplier.applyTo(copy, maskPattern.maskFunction(), modulesMask);
 
             System.out.println("\n" + maskPattern);

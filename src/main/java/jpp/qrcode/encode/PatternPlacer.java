@@ -88,12 +88,9 @@ public class PatternPlacer {
         placeOrientation(data, version);
         placeTiming(data, version);
         placeAlignment(data, version);
-        placeOrientation(data, version);
         data[data.length - 8][8] = true;
         if (version.number() > 6) {
             placeVersionInformation(data, VersionInformation.forVersion(version));
-            System.out.println(VersionInformation.forVersion(version));
-            System.out.println(Arrays.toString(version.alignmentPositions()));
         }
         return data;
     }
