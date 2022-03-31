@@ -10,7 +10,8 @@ public class Decoder {
         MaskApplier.applyTo(data, qrCode.maskPattern().maskFunction(), reservedModulesMask);
         Version version =qrCode.version();
         byte[] extract =  DataExtractor.extract(data, reservedModulesMask, version.totalByteCount());
-        ErrorCorrection errorCorrection = QRCode.getFormatInformation(data).errorCorrection();
+        FormatInformation formatInformation = QRCode.getFormatInformation(data);
+        ErrorCorrection errorCorrection = formatInformation.errorCorrection();
         ErrorCorrectionInformation errorCorrectionInformation = version.correctionInformationFor(errorCorrection);
         byte[] destructure = DataDestructurer.destructure(extract, errorCorrectionInformation);
         return DataDecoder.decodeToString(destructure, version, errorCorrection);

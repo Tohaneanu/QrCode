@@ -16,14 +16,14 @@ public class DataStructurer {
         byte[] dataByte = new byte[noOfBytes];
 
         int dataIndex;
-        for(dataIndex = 0; dataIndex < totalBlockCount; ++dataIndex) {
+        for (dataIndex = 0; dataIndex < totalBlockCount; ++dataIndex) {
             dataBlocks[dataIndex] = new DataBlock(new byte[noOfBytes], new byte[correctionBytePerBlock]);
         }
 
         dataIndex = 0;
         int dataBlockIndex = 0;
 
-        for(int blockIndex = 0; dataIndex < dataLen; ++dataBlockIndex) {
+        for (int blockIndex = 0; dataIndex < dataLen; ++dataBlockIndex) {
             if (dataBlockIndex == newSize) {
                 dataBlocks[blockIndex] = new DataBlock(dataByte, ReedSolomon.calculateCorrectionBytes(dataByte, correctionBytePerBlock));
                 dataBlockIndex = 0;
@@ -52,7 +52,7 @@ public class DataStructurer {
         int totalBytes = 0;
         byte[][] dataBytes = new byte[totalBlockCount][];
 
-        for(int i = 0; i < totalBlockCount; ++i) {
+        for (int i = 0; i < totalBlockCount; ++i) {
             dataBytes[i] = blocks[i].dataBytes();
             totalBytes += dataBytes[i].length;
         }
@@ -60,19 +60,18 @@ public class DataStructurer {
         byte[] result = new byte[totalBytes];
         int minLen = dataBytes[0].length;
 
-        for(int i = 0; i < minLen; i++) {
-            for(int j = 0; j < totalBlockCount; j++) {
+        for (int i = 0; i < minLen; i++) {
+            for (int j = 0; j < totalBlockCount; j++) {
                 result[resultIndex] = dataBytes[j][i];
                 resultIndex++;
             }
         }
 
         int rest = ecBlocks.lowerDataByteCount() - resultIndex;
-        for(int i = totalBlockCount -  rest; i < totalBlockCount; i++){
+        for (int i = totalBlockCount - rest; i < totalBlockCount; i++) {
             result[resultIndex] = dataBytes[i][minLen];
             resultIndex++;
         }
-
         return result;
     }
 
