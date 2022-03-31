@@ -30,32 +30,32 @@ public class DataDestructurer {
         DataBlock[] dataBlocks = new DataBlock[blockNr];
         int ecBytes = errorCorrectionInformation.correctionBytesPerBlock();
         int rest = data.length % blockNr;
-        int dataBytes =errorCorrectionInformation.lowerDataByteCount();
+        int dataBytes = errorCorrectionInformation.lowerDataByteCount();
         for (int i = 0; i < dataBlocks.length - rest; i++) {
             dataBlocks[i] = new DataBlock(new byte[errorCorrectionInformation.lowerDataByteCount()], new byte[ecBytes]);
         }
         for (int i = dataBlocks.length - rest; i < dataBlocks.length; i++) {
             dataBlocks[i] = new DataBlock(new byte[errorCorrectionInformation.lowerDataByteCount() + 1], new byte[ecBytes]);
         }
-        int finalOfErrorCorrection = ecBytes * blockNr;
-        for (int dataIndex = 0, blockNumber = blockNr - 1, resultIndex = 0; dataIndex < finalOfErrorCorrection; dataIndex++) {
+        int finalOfErrorCorrection = data.length - ecBytes * blockNr;
+        for (int dataIndex = data.length - 1, blockNumber = blockNr - 1, resultIndex = ecBytes - 1; dataIndex >= finalOfErrorCorrection; dataIndex--) {
             if (blockNumber > -1) {
                 dataBlocks[blockNumber].correctionBytes()[resultIndex] = data[dataIndex];
                 blockNumber--;
             } else {
                 blockNumber = blockNr - 1;
-                dataBlocks[blockNumber--].correctionBytes()[++resultIndex] = data[dataIndex];
+                dataBlocks[blockNumber--].correctionBytes()[--resultIndex] = data[dataIndex];
             }
         }
-        for (int dataIndex = finalOfErrorCorrection, increment = 0; dataIndex < finalOfErrorCorrection + rest; dataIndex++) {
+        for (int dataIndex = finalOfErrorCorrection - 1, increment = 0; dataIndex >= finalOfErrorCorrection - rest; dataIndex--) {
             dataBlocks[dataBlocks.length - 1 - increment++].dataBytes()[dataBytes] = data[dataIndex];
         }
-        for (int dataIndex = finalOfErrorCorrection + rest-1, blockDecrement = blockNr - 1; dataIndex < data.length; dataIndex++) {
+        dataBytes--;
+        for (int dataIndex = finalOfErrorCorrection - rest - 1, blockDecrement = blockNr - 1; dataIndex >= 0; dataIndex--) {
             if (blockDecrement > -1) {
-                dataBlocks[blockDecrement].dataBytes()[dataBytes - 1] = data[dataIndex];
+                dataBlocks[blockDecrement].dataBytes()[dataBytes] = data[dataIndex];
                 blockDecrement--;
-            }
-            else {
+            } else {
                 blockDecrement = blockNr - 1;
                 dataBlocks[blockDecrement--].dataBytes()[--dataBytes] = data[dataIndex];
             }

@@ -11,8 +11,7 @@ public class DataInserter {
         for (int i = 0; i < data.length; i++) {
             int temp = data[i];
 
-            if(data[i] < 0)
-                temp =  256 + data[i];
+            if (data[i] < 0) temp = 256 + data[i];
 
             String x = Integer.toBinaryString(temp);
             while (x.length() < 8) {
