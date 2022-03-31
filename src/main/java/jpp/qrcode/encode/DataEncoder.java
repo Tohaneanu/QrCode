@@ -2,6 +2,7 @@ package jpp.qrcode.encode;
 
 import jpp.qrcode.ErrorCorrection;
 import jpp.qrcode.Version;
+import jpp.qrcode.decode.DataDecoder;
 
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;

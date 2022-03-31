@@ -157,13 +157,11 @@ public class MaskSelector {
             }
         }
 
-
-        System.out.print(10 * (Math.abs(2 * darkModules - modules) * 10 / modules) + " ");
         return 10 * (Math.abs(2 * darkModules - modules) * 10 / modules);
     }
 
     public static int calculatePenaltyFor(boolean[][] data) {
-        return calculatePenalty2x2(data) + calculatePenaltyBlackWhite(data) + calculatePenaltyPattern(data) + calculatePenaltySameColored(data);
+        return calculatePenaltySameColored(data) + calculatePenalty2x2(data) + calculatePenaltyBlackWhite(data) + calculatePenaltyPattern(data);
     }
 
     public static MaskPattern maskWithBestMask(boolean[][] data, ErrorCorrection correction, ReservedModulesMask modulesMask) {
