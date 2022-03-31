@@ -114,8 +114,8 @@ public class Main {
 //            System.out.println();
 //        }
 
-//        QRCode qrCode = Encoder.createFromString("Hallo", ErrorCorrection.MEDIUM);
-//        System.out.println("\n" + qrCode.matrixToString());
+        QRCode qrCode = Encoder.createFromString("Hallo", ErrorCorrection.MEDIUM);
+        System.out.println("\n" + qrCode.matrixToString());
         byte a= (byte) 0b10000000;
         System.out.println(a);
 //        boolean[][] data = new boolean[0][];
