@@ -35,10 +35,10 @@ public class QRCode {
         for (int i = 0; i < matrix.length; i++) {
             for (int j = 0; j < matrix.length; j++) {
                 if (matrix[i][j]) {
-                    char d = (char) 0x2588;
+                    char d = (char) 0x2591;
                     x.append(d).append(d);
                 } else {
-                    char d = (char) 0x2591;
+                    char d = (char) 0x2588;
                     x.append(d).append(d);
                 }
             }

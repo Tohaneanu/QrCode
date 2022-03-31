@@ -116,7 +116,8 @@ public class Main {
 
 //        QRCode qrCode = Encoder.createFromString("Hallo", ErrorCorrection.MEDIUM);
 //        System.out.println("\n" + qrCode.matrixToString());
-
+        byte a= (byte) 0b10000000;
+        System.out.println(a);
 //        boolean[][] data = new boolean[0][];
 //        File file = new File("C:\\Users\\grecu\\IdeaProjects\\QrCode\\examples\\Hallo_H.txt");
 //

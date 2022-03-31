@@ -34,9 +34,9 @@ public class ReservedModulesMask {
                 if (!reserved[alignmentPosition][position]) {
                     //center of alignment models
                     for (int i = 0; i < 5; i++)
-                        for (int j = 0; j < 5; j++){
+                        for (int j = 0; j < 5; j++) {
                             reserved[alignmentPosition - 2 + i][position - 2 + j] = true;
-                }
+                        }
                 }
             }
         }
@@ -46,7 +46,18 @@ public class ReservedModulesMask {
             reserved[i][6] = true;
         }
         reserved[reserved.length - 8][8] = true;
-
+        if (version.number() > 6) {
+            for (int i = 0; i < 6; i++) {
+                for (int j = 0; j < 3; j++) {
+                    reserved[reserved.length - 9 - j][5 - i] = true;
+                }
+            }
+            for (int i = 0; i < 6; i++) {
+                for (int j = 0; j < 3; j++) {
+                    reserved[5 - i][reserved.length - 9 - j] = true;
+                }
+            }
+        }
         return new ReservedModulesMask(reserved);
     }
 }

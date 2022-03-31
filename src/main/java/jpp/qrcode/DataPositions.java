@@ -24,12 +24,18 @@ public class DataPositions {
 
     public boolean next() {
         if (i == mask.size() - 9 && j == 0) return false;
+        if (i == mask.size() - 12 && j == 0 && mask.size() >= 45) return false;
         if (up) {
             if (right) {
                 j--;
                 right = false;
             } else {
-                if (i == 9 && (j >= mask.size() - 8 || j <= 8) && j >= 0) {
+                if (mask.size() >= 45 && i == 7 && j == mask.size() - 10) {
+                    i = 0;
+                    j = mask.size() - 12;
+                    right = false;
+                    up = false;
+                } else if (i == 9 && (j >= mask.size() - 8 || j <= 8) && j >= 0) {
                     if (count < 2) {
                         count++;
                         if (j == 7) {
@@ -120,18 +126,26 @@ public class DataPositions {
                     j--;
                     right = false;
                 } else {
-                    if (mask.isReserved(i + 1, j + 1) && mask.isReserved(i + 1, j) && i + 1 != 6) {
+                    if (mask.size() >= 45 && i == mask.size() - 12 && j <= 4 && !right) {
+                        if(j==2){
+                            right=true;
+                            up=true;
+                            i--;
+                            j++;
+                        }else
+                        j--;
+                    } else if (mask.isReserved(i + 1, j + 1) && mask.isReserved(i + 1, j) && i + 1 != 6) {
                         i += 6;
                         j++;
                         right = true;
                     } else if (i == 5) {
-                        if (mask.isReserved(i+2,j+1)){
-                            i+=2;
+                        if (mask.isReserved(i + 2, j + 1)) {
+                            i += 2;
+                        } else {
+                            i += 2;
+                            j++;
+                            right = true;
                         }
-                        else{
-                        i += 2;
-                        j++;
-                        right = true;}
                     } else if (mask.isReserved(i + 1, j + 1) && !mask.isReserved(i + 1, j)) {
                         i++;
                     } else {
