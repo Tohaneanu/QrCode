@@ -1,5 +1,7 @@
 package jpp.qrcode;
 
+import jpp.qrcode.decode.DataDecoder;
+import jpp.qrcode.decode.DataDestructurer;
 import jpp.qrcode.decode.DataExtractor;
 import jpp.qrcode.decode.Decoder;
 import jpp.qrcode.encode.DataInserter;
@@ -116,18 +118,18 @@ public class Main {
 //        QRCode qrCode = Encoder.createFromString("Hallo", ErrorCorrection.HIGH);
 //        System.out.println("\n" + qrCode.matrixToString());
 
-
-        boolean[][] data = new boolean[0][];
-        File file = new File("C:/Users/User/Desktop/qrcode/examples/WueCampus_H.txt");
-
-        try (InputStream in = new FileInputStream(file)) {
-            data = TextReader.read(in);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        System.out.println(Decoder.decodeToString(createValidatedFromBooleans(data)));
-
+//
+//        boolean[][] data = new boolean[0][];
+//        File file = new File("C:/Users/User/Desktop/qrcode/examples/WueCampus_H.txt");
+//
+//        try (InputStream in = new FileInputStream(file)) {
+//            data = TextReader.read(in);
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        System.out.println(Decoder.decodeToString(createValidatedFromBooleans(data)));
+        System.out.println(DataDecoder.readEncoding(new byte[]{16}));
 //        DataEncoderResult result = DataEncoder.encodeForCorrectionLevel("Hallo", ErrorCorrection.HIGH);
 //        System.out.println(DataDecoder.decodeToString(result.bytes(), result.version(), ErrorCorrection.HIGH));
 
