@@ -10,48 +10,73 @@ import java.nio.charset.StandardCharsets;
 
 public final class DataEncoder {
 	public static DataEncoderResult encodeForCorrectionLevel(String str, ErrorCorrection level) {
-		Charset utf8charset = StandardCharsets.UTF_8;
-		Charset iso88591charset = StandardCharsets.ISO_8859_1;
+		String bytes = "0100";
 
-		ByteBuffer inputBuffer = ByteBuffer.wrap(str.getBytes(utf8charset));
+		int strLen = str.length();
+		Version version = Version.forDataBytesCount(strLen, level);
 
-// decode UTF-8
-		CharBuffer data = utf8charset.decode(inputBuffer);
+		String cci = Integer.toBinaryString(str.length());
 
-// encode ISO-8559-1
-		ByteBuffer outputBuffer = iso88591charset.encode(data);
-		byte[] outputData = outputBuffer.array();
-		byte[] result = null;
+		if(version.number() < 10){
+			while(cci.length() < 8){
+				cci = '0' + cci;
+			}
+		} else {
+			while(cci.length() < 16){
+				cci = '0' + cci;
+			}
+		}
 
-		int cci = 8;
+		bytes += cci;
 
-		Version resultVersion = Version.forDataBytesCount(outputData.length, level);
+		for(int i = 0; i < strLen; i++){
+			String x = Integer.toBinaryString(str.charAt(i));
 
-		if(resultVersion.number() > 10)
-			cci = 16;
-
-		int rest = (outputData.length * 8 + cci + 8) % 8;
-
-		result = new byte[resultVersion.totalByteCount()];
-
-		for(int i = 0; i < outputData.length; i++)
-			result[i] = outputData[i];
-
-		if(rest != 0){
-			for(int i = outputData.length; i < outputData.length + 8 - rest; i++)
-				result[i] = 0;
-		}else rest=8;
-
-		int step = 0;
-		for(int i = outputData.length + 8 - rest; i < result.length; i++)
-			if(step == 0) {
-				result[i] = (byte)  236;
-				step = 1;
-			} else {
-				result[i] = (byte) 17;
-				step = 0;
+			while(x.length() < 8){
+				x = '0' + x;
 			}
 
-		return new DataEncoderResult(result, Version.fromNumber(resultVersion.number()));
+			bytes += x;
+		}
+
+		bytes += "0000";
+
+		int bytesLen = bytes.length();
+
+		int resultLen = bytesLen / 8;
+		int rest = (bytesLen / 8) % 8;
+
+		if(rest % 8 != 0) {
+			resultLen += rest;
+			bytesLen += 8 * rest;
+		}
+
+		int addBytes = rest;
+
+		while(addBytes > 0){
+			bytes += "11101100";
+			addBytes--;
+			if(addBytes > 0) {
+				bytes += "00010001";
+				addBytes--;
+			}
+		}
+
+		byte[] result = new byte[resultLen];
+		int bytesIndex = 0;
+		int resultIndex = 0;
+		while(bytesIndex < bytesLen){
+			byte aux = 0;
+			for(int i = 7; i >= 0; i--){
+				aux += Math.pow(2, i) * (bytes.charAt(bytesIndex) - '0');
+				bytesIndex++;
+			}
+
+			result[resultIndex] = aux;
+			resultIndex++;
+		}
+
+
+		return new DataEncoderResult(result, version.fromNumber(version.number()));
 	}
 }

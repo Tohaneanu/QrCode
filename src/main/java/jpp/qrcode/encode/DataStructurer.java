@@ -53,7 +53,7 @@ public class DataStructurer {
         byte[][] dataBytes = new byte[totalBlockCount][];
         byte[][] correctionBlocks = new byte[totalBlockCount][];
 
-        for (int i = 0; i < totalBlockCount; ++i) {
+        for(int i = 0; i < totalBlockCount; ++i) {
             dataBytes[i] = blocks[i].dataBytes();
             correctionBlocks[i] = blocks[i].correctionBytes();
             totalBytes += dataBytes[i].length + correctionBlocks[i].length;
@@ -63,19 +63,20 @@ public class DataStructurer {
         int minLen = dataBytes[0].length;
         int index = 0;
 
-        for (int i = 0; i < minLen; i++) {
+        for(int i = 0; i < minLen; i++) {
             for (int j = 0; j < totalBlockCount; j++) {
                 result[resultIndex] = dataBytes[j][i];
                 resultIndex++;
             }
         }
 
-        while (minLen == dataBytes[index].length) {
+        while(minLen == dataBytes[index].length){
             index++;
-            if (index == totalBlockCount) break;
+            if(index == totalBlockCount)
+                break;
         }
 
-        if (index < totalBlockCount) {
+        if(index < totalBlockCount) {
             for (; index < totalBlockCount; index++) {
                 result[resultIndex] = dataBytes[index][minLen];
                 resultIndex++;
