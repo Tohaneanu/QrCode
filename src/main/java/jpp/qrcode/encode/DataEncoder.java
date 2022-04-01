@@ -39,7 +39,9 @@ public final class DataEncoder {
             bytes += x;
         }
 
-        bytes += "0000";
+        while(bytes.length() % 8 != 0){
+            bytes += '0';
+        }
 
         int bytesLen = bytes.length();
 
@@ -47,9 +49,25 @@ public final class DataEncoder {
         ErrorCorrectionInformation errorCorrectionInformation = version.correctionInformationFor(level);
         int rest = errorCorrectionInformation.totalDataByteCount() - resultLen;
 
+        if(rest < 0) {
+            version = Version.forDataBytesCount(resultLen, level);
+            if(version.number() >= 10) {
+                for (int i = 0; i < 8; i++)
+                    bytes = bytes.substring(12);
+                cci = Integer.toBinaryString(strLen);
+                while (cci.length() < 16) {
+                    cci = '0' + cci;
+                }
+
+                bytes = "0100" + bytes;
+                bytesLen = bytes.length();
+                errorCorrectionInformation = version.correctionInformationFor(level);
+            }
+            rest = errorCorrectionInformation.totalDataByteCount() - resultLen;
+        }
+
         if (rest != 0) {
             resultLen += rest;
-            bytesLen += 8 * rest;
         }
 
         while (rest > 0) {
@@ -64,6 +82,7 @@ public final class DataEncoder {
         byte[] result = new byte[resultLen];
         int bytesIndex = 0;
         int resultIndex = 0;
+        bytesLen = bytes.length();
         while (bytesIndex < bytesLen) {
             byte aux = 0;
             for (int i = 7; i >= 0; i--) {
