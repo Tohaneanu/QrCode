@@ -1,9 +1,9 @@
 package jpp.qrcode;
 
-import jpp.qrcode.decode.DataDecoder;
+import jpp.qrcode.decode.DataExtractor;
 import jpp.qrcode.decode.Decoder;
+import jpp.qrcode.encode.DataInserter;
 import jpp.qrcode.encode.Encoder;
-import jpp.qrcode.encode.MaskSelector;
 import jpp.qrcode.io.TextReader;
 import jpp.qrcode.reedsolomon.ReedSolomonException;
 
@@ -108,24 +108,25 @@ public class Main {
 
 //        QRCode qrCode = Encoder.createFromString("Hallo", ErrorCorrection.MEDIUM);
 //        System.out.println("\n" + qrCode.matrixToString());
+
 //        byte a= (byte) 0b10000000;
 //        System.out.println(a);
         //System.out.println(DataDecoder.readCharacterCount(new byte[]{0, (byte) 128}, 8));
 
-        QRCode qrCode = Encoder.createFromString("Hallo", ErrorCorrection.HIGH);
-        System.out.println("\n" + qrCode.matrixToString());
+//        QRCode qrCode = Encoder.createFromString("Hallo", ErrorCorrection.HIGH);
+//        System.out.println("\n" + qrCode.matrixToString());
 
 
-//        boolean[][] data = new boolean[0][];
-//        File file = new File("C:/Users/User/Desktop/qrcode/examples/WueCampus_H.txt");
-//
-//        try (InputStream in = new FileInputStream(file)) {
-//            data = TextReader.read(in);
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        System.out.println(Decoder.decodeToString(createValidatedFromBooleans(data)));
+        boolean[][] data = new boolean[0][];
+        File file = new File("C:/Users/User/Desktop/qrcode/examples/WueCampus_H.txt");
+
+        try (InputStream in = new FileInputStream(file)) {
+            data = TextReader.read(in);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        System.out.println(Decoder.decodeToString(createValidatedFromBooleans(data)));
 
 //        DataEncoderResult result = DataEncoder.encodeForCorrectionLevel("Hallo", ErrorCorrection.HIGH);
 //        System.out.println(DataDecoder.decodeToString(result.bytes(), result.version(), ErrorCorrection.HIGH));
@@ -188,6 +189,19 @@ public class Main {
 
 
         //System.out.println(MaskSelector.calculatePenaltyFor(data));
+
+
+        //
+//        Version version = Version.fromNumber(7);
+//        boolean[][] matrix = new boolean[version.size()][version.size()];
+//        byte[] data = new byte[]{(byte) 230, 13, 51, 90, 52, (byte) 207, (byte) 144, 28, (byte) 211, 60, 62, 21, 105, 17, 95, 79, (byte) 134, (byte) 247, (byte) 181, 49, (byte) 193, 63, 114, 29, 99, (byte) 145, 118, (byte) 240, (byte) 206, (byte) 234, 4, 24, (byte) 222, (byte) 129, 116, 8, (byte) 218, (byte) 212, 85, 71, (byte) 228, 80, (byte) 161, 104, (byte) 159, (byte) 179, 44, (byte) 247, (byte) 137, 101, (byte) 136, (byte) 173, (byte) 137, 20, (byte) 171, 30, (byte) 252, (byte) 209, (byte) 142, 78, 45, 72, (byte) 144, 70, (byte) 204, 53, 81, (byte) 132, 33, (byte) 251, (byte) 211, 8, 4, (byte) 152, (byte) 152, (byte) 225, 83, (byte) 229, 114, (byte) 248, (byte) 178, (byte) 188, 72, 81, (byte) 146, (byte) 142, (byte) 136, 118, (byte) 198, (byte) 133, (byte) 212, (byte) 251, (byte) 236, (byte) 221, (byte) 185, 45, 119, 117, 126, 52, (byte) 255, (byte) 210, (byte) 143, 6, (byte) 136, (byte) 248, 1, (byte) 215, (byte) 132, (byte) 179, (byte) 214, 116, 41, (byte) 201, 101, (byte) 163, (byte) 141, (byte) 244, 58, 76, 73, 15, (byte) 255, (byte) 157, 81, (byte) 134, 109, (byte) 193, (byte) 140, (byte) 241, 56, 48, 126, (byte) 186, (byte) 136, 110, 74, (byte) 162, (byte) 180, 118, 99, 16, (byte) 222, 75, 62, (byte) 166, (byte) 236, 116, 125, (byte) 151, (byte) 164, (byte) 244, (byte) 207, (byte) 174, 75, (byte) 162, 26, (byte) 160, (byte) 132, (byte) 151, 27, (byte) 248, (byte) 206, (byte) 152, 58, (byte) 235, (byte) 213, 91, 38, 59, 103, 21, (byte) 217, (byte) 197, (byte) 235, (byte) 241, (byte) 226, (byte) 254, (byte) 173, 84, 57, 73, 41, (byte) 231, (byte) 232, (byte) 246, 73, 28, (byte) 248, (byte) 168, 126, (byte) 219, 24, 61, 9, (byte) 168, (byte) 231, (byte) 216, 102, (byte) 243, 126, 27, 127, 95, (byte) 255, 55, (byte) 215, 46, 44, (byte) 222, (byte) 154, 92, (byte) 238, 34, (byte) 134, (byte) 199, (byte) 230, 80, 18, (byte) 209, 16, (byte) 168, (byte) 194, 53, (byte) 219, 50, (byte) 180, 26, (byte) 201, (byte) 223, 0, (byte) 188, (byte) 183, (byte) 154, (byte) 218, (byte) 152, (byte) 163, (byte) 247, (byte) 201, (byte) 141, (byte) 213, 15, (byte) 187, (byte) 242, (byte) 154, (byte) 155, 107, (byte) 223, 98, (byte) 145, 24, 44, 121, 104, (byte) 179, 32, (byte) 160, (byte) 242, (byte) 203, (byte) 132, 59, 67, (byte) 212, 61, (byte) 186, 107, (byte) 232, 9, (byte) 202, 36, 77, 19, (byte) 188, 16, 95, 33, (byte) 146, (byte) 238, (byte) 211, 63, (byte) 181, (byte) 156, 12, (byte) 143, (byte) 192, (byte) 131, 32, 101, 8, (byte) 181, 12, (byte) 139};
+//        DataInserter.insert(matrix, ReservedModulesMask.forVersion(version), data);
+//        byte[] extract = DataExtractor.extract(matrix, ReservedModulesMask.forVersion(version), data.length);
+//        for (int i = 0; i < data.length; i++) {
+//            if (data[i] != extract[i])
+//                System.out.println(i + "  "  + "   " + data[i] + "  " + extract[i]);
+//        }
+//        System.out.println("nice");
 
     }
 

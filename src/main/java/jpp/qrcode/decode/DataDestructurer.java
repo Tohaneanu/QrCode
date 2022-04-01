@@ -15,7 +15,7 @@ public class DataDestructurer {
                 for (int j = 0; j < blocks[i].dataBytes().length; j++) {
                     bytes[limit + j] = blocks[i].dataBytes()[j];
                 }
-                limit = blocks[i].dataBytes().length;
+                limit += blocks[i].dataBytes().length;
             } catch (ReedSolomonException e) {
                 throw new QRDecodeException("Data correction failed " + e.toString(), e.getCause());
             }
