@@ -1,5 +1,7 @@
 package jpp.qrcode;
 
+import jpp.qrcode.encode.DataStructurer;
+import jpp.qrcode.encode.MaskSelector;
 import jpp.qrcode.io.TextReader;
 import junit.framework.TestCase;
 
@@ -15,7 +17,7 @@ public class QRCodeTest extends TestCase {
 
     public void testCreateValidatedFromBooleans() {
         //good
-        File f = new File("C:/Users/User/Desktop/qrcode/examples");
+        File f = new File("C:\\Users\\grecu\\IdeaProjects\\QrCode\\examples");
 
         FilenameFilter textFilter = new FilenameFilter() {
             public boolean accept(File dir, String name) {
@@ -30,11 +32,16 @@ public class QRCodeTest extends TestCase {
         for (int i = 0; i < files.length; i++) {
             try (InputStream in = new FileInputStream(files[i])) {
                 data = TextReader.read(in);
+
+                System.out.println(in + " " +MaskSelector.calculatePenaltyFor(data));
+
                 QRCode qrCode = QRCode.createValidatedFromBooleans(data);
 
                 assertEquals(qrCode.version.number(), version[i]);
                 assertEquals(qrCode.maskPattern(), maskPatterns[i]);
                 assertEquals(qrCode.errorCorrection(), errorCorrections[i]);
+
+
             } catch (Exception e) {
                 e.printStackTrace();
             }

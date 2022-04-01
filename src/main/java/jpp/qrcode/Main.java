@@ -109,22 +109,24 @@ public class Main {
 //        System.out.println("\n" + qrCode.matrixToString());
 //        byte a= (byte) 0b10000000;
 //        System.out.println(a);
-        System.out.println(DataDecoder.readCharacterCount(new byte[]{0, (byte) 128}, 8));
+        //System.out.println(DataDecoder.readCharacterCount(new byte[]{0, (byte) 128}, 8));
 
-        QRCode qrCode = Encoder.createFromString("\"Hello there.\" - \"General QRCodi. You are a square one.\"", ErrorCorrection.QUARTILE);
-        System.out.println("\n" + qrCode.matrixToString());
+//        QRCode qrCode = Encoder.createFromString("Hallo", ErrorCorrection.MEDIUM);
+//        System.out.println("\n" + qrCode.matrixToString());
 
 
-        boolean[][] data = new boolean[0][];
-        File file = new File("C:/Users/User/Desktop/qrcode/examples/WueCampus_H.txt");
 
-        try (InputStream in = new FileInputStream(file)) {
-            data = TextReader.read(in);
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        System.out.println(Decoder.decodeToString(createValidatedFromBooleans(data)));
+//        boolean[][] data = new boolean[0][];
+//        File file = new File("C:/Users/User/Desktop/qrcode/examples/WueCampus_H.txt");
+//
+//        try (InputStream in = new FileInputStream(file)) {
+//            data = TextReader.read(in);
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        System.out.println(Decoder.decodeToString(createValidatedFromBooleans(data)));
 
 //        DataEncoderResult result = DataEncoder.encodeForCorrectionLevel("Hallo", ErrorCorrection.HIGH);
 //        System.out.println(DataDecoder.decodeToString(result.bytes(), result.version(), ErrorCorrection.HIGH));

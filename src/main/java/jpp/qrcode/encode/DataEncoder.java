@@ -1,83 +1,81 @@
 package jpp.qrcode.encode;
 
 import jpp.qrcode.ErrorCorrection;
+import jpp.qrcode.ErrorCorrectionInformation;
 import jpp.qrcode.Version;
 
-import java.nio.ByteBuffer;
-import java.nio.CharBuffer;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-
 public final class DataEncoder {
-	public static DataEncoderResult encodeForCorrectionLevel(String str, ErrorCorrection level) {
-		String bytes = "0100";
+    public static DataEncoderResult encodeForCorrectionLevel(String str, ErrorCorrection level) {
+        Version test = Version.fromNumber(40);
+        if (test.totalByteCount() < str.length())
+            throw new StringIndexOutOfBoundsException(" String index out of range: " + str.length());
 
-		int strLen = str.length();
-		Version version = Version.forDataBytesCount(strLen, level);
-		System.out.println(version.totalByteCount());
-//		version.correctionInformationFor(level).
-		String cci = Integer.toBinaryString(str.length());
+        String bytes = "0100";
 
-		if(version.number() < 10){
-			while(cci.length() < 8){
-				cci = '0' + cci;
-			}
-		} else {
-			while(cci.length() < 16){
-				cci = '0' + cci;
-			}
-		}
+        int strLen = str.length();
+        Version version = Version.forDataBytesCount(strLen, level);
 
-		bytes += cci;
+        String cci = Integer.toBinaryString(str.length());
 
-		for(int i = 0; i < strLen; i++){
-			String x = Integer.toBinaryString(str.charAt(i));
+        if (version.number() < 10) {
+            while (cci.length() < 8) {
+                cci = '0' + cci;
+            }
+        } else {
+            while (cci.length() < 16) {
+                cci = '0' + cci;
+            }
+        }
 
-			while(x.length() < 8){
-				x = '0' + x;
-			}
+        bytes += cci;
 
-			bytes += x;
-		}
+        for (int i = 0; i < strLen; i++) {
+            String x = Integer.toBinaryString(str.charAt(i));
 
-		bytes += "0000";
+            while (x.length() < 8) {
+                x = '0' + x;
+            }
 
-		int bytesLen = bytes.length();
+            bytes += x;
+        }
 
-		int resultLen = bytesLen / 8;
-		int rest = resultLen % 8;
+        bytes += "0000";
 
-		if(rest % 8 != 0) {
-			resultLen += rest;
-			bytesLen += 8 * rest;
-		}
+        int bytesLen = bytes.length();
 
-		int addBytes = rest;
+        int resultLen = bytesLen / 8;
+        ErrorCorrectionInformation errorCorrectionInformation = version.correctionInformationFor(level);
+        int rest = errorCorrectionInformation.totalDataByteCount() - resultLen;
 
-		while(addBytes > 0){
-			bytes += "11101100";
-			addBytes--;
-			if(addBytes > 0) {
-				bytes += "00010001";
-				addBytes--;
-			}
-		}
+        if (rest != 0) {
+            resultLen += rest;
+            bytesLen += 8 * rest;
+        }
 
-		byte[] result = new byte[resultLen];
-		int bytesIndex = 0;
-		int resultIndex = 0;
-		while(bytesIndex < bytesLen){
-			byte aux = 0;
-			for(int i = 7; i >= 0; i--){
-				aux += Math.pow(2, i) * (bytes.charAt(bytesIndex) - '0');
-				bytesIndex++;
-			}
+        while (rest > 0) {
+            bytes += "11101100";
+            rest--;
+            if (rest > 0) {
+                bytes += "00010001";
+                rest--;
+            }
+        }
 
-			result[resultIndex] = aux;
-			resultIndex++;
-		}
+        byte[] result = new byte[resultLen];
+        int bytesIndex = 0;
+        int resultIndex = 0;
+        while (bytesIndex < bytesLen) {
+            byte aux = 0;
+            for (int i = 7; i >= 0; i--) {
+                aux += Math.pow(2, i) * (bytes.charAt(bytesIndex) - '0');
+                bytesIndex++;
+            }
+
+            result[resultIndex] = aux;
+            resultIndex++;
+        }
 
 
-		return new DataEncoderResult(result, version.fromNumber(version.number()));
-	}
+        return new DataEncoderResult(result, version.fromNumber(version.number()));
+    }
 }

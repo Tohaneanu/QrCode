@@ -182,8 +182,6 @@ public class MaskSelector {
         FormatInformation formatInformation = FormatInformation.get(correction, mask);
         MaskApplier.applyTo(data, mask.maskFunction(), modulesMask);
 
-        System.out.println(calculatePenaltyFor(data) + " " + mask);
-
         int inform = formatInformation.formatInfo();
         placeFormatInformation(data, inform);
         return mask;
