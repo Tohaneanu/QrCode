@@ -20,20 +20,85 @@ public class DataDecoder {
     }
 
     public static int readCharacterCount(byte[] bytes, int count) {
-        int nr = bytes[0];
+        byte[] aux = new byte[bytes.length * 8];
 
+        for (int i = 0; i < bytes.length; i++) {
+            int temp = bytes[i];
+
+            if (bytes[i] < 0) temp = 256 + bytes[i];
+
+            String x = Integer.toBinaryString(temp);
+            while (x.length() < 8) {
+                x = '0' + x;
+            }
+
+            for (int j = 0; j < 8; j++)
+                aux[i * 8 + j] = (byte) (x.charAt(j) - '0');
+
+        }
+        int nr = 0;
+        for (int i = 4; i < 4 + count; i++) {
+            nr += (int) (aux[i] * Math.pow(2, Math.abs(count - i + 3)));
+
+        }
         return nr;
     }
 
     public static String decodeToString(byte[] bytes, Version version, ErrorCorrection errorCorrection) {
         if (version.correctionInformationFor(errorCorrection).totalDataByteCount() != bytes.length)
             throw new IllegalArgumentException("The number of bytes of this version does not match the error correction level");
+        String result = "";
         Encoding encoding = readEncoding(bytes);
         int characterCount = 0;
-        if (version.number() >= 10) characterCount = readCharacterCount(bytes, 16);
-        else characterCount = readCharacterCount(bytes, 8);
+        byte[] aux = new byte[bytes.length * 8];
+
+        for (int i = 0; i < bytes.length; i++) {
+            int temp = bytes[i];
+
+            if (bytes[i] < 0) temp = 256 + bytes[i];
+
+            String x = Integer.toBinaryString(temp);
+            while (x.length() < 8) {
+                x = '0' + x;
+            }
+
+            for (int j = 0; j < 8; j++)
+                aux[i * 8 + j] = (byte) (x.charAt(j) - '0');
+        }
+        if (encoding == Encoding.BYTE)
+            if (version.number() >= 10) {
+                characterCount = readCharacterCount(bytes, 16);
+                int nr = 0;
+                int count = 7;
+                for (int i = 20; i < 8 * characterCount + 21; i++) {
+                    if (count > -1)
+                        nr += (int) (aux[i] * Math.pow(2, Math.abs(count--)));
+                    else {
+                        char a = (char) nr;
+                        result += a;
+                        count = 7;
+                        nr = (int) (aux[i] * Math.pow(2, Math.abs(count--)));
+
+                    }
+                }
+            } else {
+                characterCount = readCharacterCount(bytes, 8);
+                int nr = 0;
+                int count = 7;
+                for (int i = 12; i < 8 * characterCount + 13; i++) {
+                    if (count > -1)
+                        nr += (int) (aux[i] * Math.pow(2, Math.abs(count--)));
+                    else {
+                        char a = (char) nr;
+                        result += a;
+                        count = 7;
+                        nr = (int) (aux[i] * Math.pow(2, Math.abs(count--)));
+
+                    }
+                }
+            }
 
 
-        return new String(bytes);
+        return result;
     }
 }

@@ -14,7 +14,8 @@ public final class DataEncoder {
 
 		int strLen = str.length();
 		Version version = Version.forDataBytesCount(strLen, level);
-
+		System.out.println(version.totalByteCount());
+//		version.correctionInformationFor(level).
 		String cci = Integer.toBinaryString(str.length());
 
 		if(version.number() < 10){

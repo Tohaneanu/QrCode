@@ -6,7 +6,6 @@ public enum Encoding {
 
     public static Encoding fromBits(int i) {
         String result = "0b" + Integer.toBinaryString(i).toLowerCase();
-        System.out.println(result);
         if (result.equals("0b1"))
             return NUMERIC;
         else if (result.equals("0b10"))
