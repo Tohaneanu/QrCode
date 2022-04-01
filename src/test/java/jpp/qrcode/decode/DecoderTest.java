@@ -32,8 +32,8 @@ public class DecoderTest extends TestCase {
         if(expectedResult.length() != result.length())
             ok = false;
 
-        if(ok == true)
-            if(result.equals(expectedResult) == false){
+        if(ok)
+            if(!result.equals(expectedResult)){
                 ok = false;
             }
 

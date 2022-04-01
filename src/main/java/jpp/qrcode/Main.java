@@ -1,7 +1,5 @@
 package jpp.qrcode;
 
-import jpp.qrcode.decode.DataDestructurer;
-import jpp.qrcode.encode.DataStructurer;
 import jpp.qrcode.reedsolomon.ReedSolomonException;
 
 public class Main {
@@ -128,16 +126,25 @@ public class Main {
         /////
 
         //deinterleave
-        byte[] data=new byte[31];
-        for (int i=0;i< data.length;i++)
-            data[i]= (byte) i;
+
+//        for (int i=0;i< data.length;i++)
+//            data[i]= (byte) i;
 //        byte[] data1 = {67, 34, 54, 55, (byte) 130, 2, (byte) 246, 23, 36,210,70,86,134,2,146,23,86,36,226,38,198,118,5,82,198,86,150,6,242,230};
 //        byte[] data1 = { D2, 46, 56, 86, 02, 92, 17, 56, 24, E2, 26, C6, 76, 05, 52, C6, 56, 96, 06, F2, E6, F7, F6, 07, 57, 52, E6, 46, 26, 06, 52, 86, 16, 17, E2, 57, C2, 26, 20, 26, 05, 52, EC, 52, 15, 06, 11, E2, 24, 12, EC, 07, 11, 60, 31, A3, 8F, B9, 21, FC, 7 A, 88, 4F, 44, 07, 5F, 43, AD, 9D, AD, B3, 20, 91, 14, 46, 39, 38, E9, AD, B1, 00, C9, 68, 7E, C6, 61, 7D, 08, D8, 44, 09, 2F, F1, SE, AC, AA, D3, 96, 7 A, 77, E1, 57, 20, 6 B, 98, C6, AE, 47, 5 A, 74, F2, 2F, BD, A3, C7, 23, 7 A, 227, 200, 20, 86, 206, 126, 20, 11};
 //        DataBlock[] deinterleave = DataDestructurer.deinterleave(data, new ErrorCorrectionInformation(18, new ErrorCorrectionGroup(4, 15)));
         //byte[] test = DataDestructurer.join(deinterleave, new ErrorCorrectionInformation(2, new ErrorCorrectionGroup(2, 2)));
-        DataBlock[] split = DataStructurer.split(data, new ErrorCorrectionInformation(4, new ErrorCorrectionGroup(2, 15)));
-        byte[] interleave = DataStructurer.interleave(split, new ErrorCorrectionInformation(4, new ErrorCorrectionGroup(2, 15)));
+//        DataBlock[] split = DataStructurer.split(data, new ErrorCorrectionInformation(4, new ErrorCorrectionGroup(2, 15)));
+//        byte[] interleave = DataStructurer.interleave(split, new ErrorCorrectionInformation(4, new ErrorCorrectionGroup(2, 15)));
+
+
+        //check place format info
+//        boolean[][ ] boll=new boolean[21][21];
+//        MaskSelector.placeFormatInformation(boll, FormatInformation.get(ErrorCorrection.LOW,MaskPattern.MASK000).formatInfo());
+//       int[][] check=new int[21][21];
+//       extracted(boll,check);
+        /// end check
         System.out.println();
+
 
     }
 

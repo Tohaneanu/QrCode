@@ -228,6 +228,8 @@ public class QRCode {
             if (FormatInformation.fromBits(inf1) != null) formatInformation = FormatInformation.fromBits(inf1);
             else formatInformation = FormatInformation.fromBits(inf2);
         }
+        if (formatInformation==null)
+            throw new InvalidQRCodeException("Format information is null!");
         return formatInformation;
     }
 }
