@@ -215,11 +215,11 @@ public class QRCode {
         j = 14;
         for (int i = 0; i < 7; i++) {
             aux = data[data.length - 1 - i][8] ? 1 : 0;
-            inf2 = (int) (inf1 + aux * Math.pow(2, j--));
+            inf2 = (int) (inf2 + aux * Math.pow(2, j--));
         }
         for (int i = 7; i > -1; i--) {
             aux = data[8][data.length - 1 - i] ? 1 : 0;
-            inf2 = (int) (inf1 + aux * Math.pow(2, i));
+            inf2 = (int) (inf2 + aux * Math.pow(2, i));
         }
         FormatInformation formatInformation;
         if (inf1 == inf2) {

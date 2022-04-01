@@ -52,10 +52,7 @@ public class QRCodeTest extends TestCase {
         File[] invalids = f.listFiles(textFilter);
         boolean[][] invalidData = new boolean[0][];
         for (int i = 0; i < invalids.length; i++) {
-            if (i==2)
-                continue;
             try (InputStream in = new FileInputStream(invalids[i])) {
-
                 invalidData = TextReader.read(in);
                 boolean[][] finalInvalidData = invalidData;
                 Throwable throwable = assertThrows(InvalidQRCodeException.class, () -> {
