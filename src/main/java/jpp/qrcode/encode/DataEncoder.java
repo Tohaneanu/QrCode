@@ -44,7 +44,7 @@ public final class DataEncoder {
 		int bytesLen = bytes.length();
 
 		int resultLen = bytesLen / 8;
-		int rest = (bytesLen / 8) % 8;
+		int rest = resultLen % 8;
 
 		if(rest % 8 != 0) {
 			resultLen += rest;
