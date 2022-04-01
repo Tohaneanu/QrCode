@@ -13,7 +13,7 @@ public final class DataEncoder {
         String bytes = "0100";
 
         int strLen = str.length();
-        Version version = Version.forDataBytesCount(strLen, level);
+        Version version = Version.forDataBytesCount(str.length(), level);
 
         String cci = Integer.toBinaryString(str.length());
 
@@ -29,7 +29,7 @@ public final class DataEncoder {
 
         bytes += cci;
 
-        for (int i = 0; i < strLen; i++) {
+        for (int i = 0; i < str.length(); i++) {
             String x = Integer.toBinaryString(str.charAt(i));
 
             while (x.length() < 8) {
@@ -52,15 +52,14 @@ public final class DataEncoder {
         if(rest < 0) {
             version = Version.forDataBytesCount(resultLen, level);
             if(version.number() >= 10) {
-                for (int i = 0; i < 8; i++)
-                    bytes = bytes.substring(12);
+                bytes = bytes.substring(12);
+
                 cci = Integer.toBinaryString(strLen);
                 while (cci.length() < 16) {
                     cci = '0' + cci;
                 }
 
-                bytes = "0100" + bytes;
-                bytesLen = bytes.length();
+                bytes = "0100" + cci + bytes;
                 errorCorrectionInformation = version.correctionInformationFor(level);
             }
             rest = errorCorrectionInformation.totalDataByteCount() - resultLen;
@@ -68,15 +67,6 @@ public final class DataEncoder {
 
         if (rest != 0) {
             resultLen += rest;
-        }
-
-        while (rest > 0) {
-            bytes += "11101100";
-            rest--;
-            if (rest > 0) {
-                bytes += "00010001";
-                rest--;
-            }
         }
 
         byte[] result = new byte[resultLen];
@@ -92,6 +82,17 @@ public final class DataEncoder {
 
             result[resultIndex] = aux;
             resultIndex++;
+        }
+
+        int step = 0;
+        for(int i = resultIndex; i < resultLen; i++){
+            if(step == 0){
+                result[i] = (byte) 236;
+                step = 1;
+            } else {
+                result[i] = (byte) 17;
+                step = 0;
+            }
         }
 
 
