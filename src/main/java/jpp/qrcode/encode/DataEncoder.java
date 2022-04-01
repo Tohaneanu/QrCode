@@ -2,7 +2,6 @@ package jpp.qrcode.encode;
 
 import jpp.qrcode.ErrorCorrection;
 import jpp.qrcode.Version;
-import jpp.qrcode.decode.DataDecoder;
 
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
@@ -41,10 +40,7 @@ public final class DataEncoder {
 		if(rest != 0){
 			for(int i = outputData.length; i < outputData.length + 8 - rest; i++)
 				result[i] = 0;
-		}else
-			rest=8;
-
-
+		}else rest=8;
 
 		int step = 0;
 		for(int i = outputData.length + 8 - rest; i < result.length; i++)
@@ -56,7 +52,6 @@ public final class DataEncoder {
 				step = 0;
 			}
 
-		//return new DataEncoderResult(result, Version.forDataBytesCount(result.length, level));
 		return new DataEncoderResult(result, Version.fromNumber(resultVersion.number()));
 	}
 }

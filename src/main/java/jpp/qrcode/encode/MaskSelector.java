@@ -12,21 +12,21 @@ public class MaskSelector {
             binary = '0' + binary;
 
         for (int i = 0; i < 6; i++) {
-            res[8][i] = (int) binary.charAt(i) == 1;
+            res[8][i] =  (binary.charAt(i) == '1');
         }
-        res[8][7] = (int) binary.charAt(6) == 1;
-        res[8][8] = (int) binary.charAt(7) == 1;
-        res[7][8] = (int) binary.charAt(8) == 1;
+        res[8][7] = (binary.charAt(6) == '1');
+        res[8][8] = (binary.charAt(7) == '1');
+        res[7][8] = (binary.charAt(8) == '1');
         int j = 9;
         for (int i = 5; i > -1; i--) {
-            res[i][8] = (int) binary.charAt(j++) == 1;
+            res[i][8] = (binary.charAt(j++) == '1');
         }
         for (int i = 0; i < 7; i++) {
-            res[res.length - 1 - i][8] = (int) binary.charAt(i) == 1;
+            res[res.length - 1 - i][8] = (binary.charAt(i) == '1');
         }
         j = 7;
         for (int i = 7; i > -1; i--) {
-            res[8][res.length - 1 - i] = (int) binary.charAt(j++) == 1;
+            res[8][res.length - 1 - i] = (binary.charAt(j++) == '1');
         }
     }
 
@@ -78,7 +78,6 @@ public class MaskSelector {
 
 
 
-        System.out.print(penalty + " ");
         return penalty;
     }
 
@@ -96,7 +95,6 @@ public class MaskSelector {
         }
 
 
-        System.out.print(penalty + " ");
         return penalty;
     }
 
@@ -141,7 +139,6 @@ public class MaskSelector {
 
 
 
-        System.out.print(penalty + " ");
         return penalty;
 
     }
@@ -171,11 +168,9 @@ public class MaskSelector {
         MaskPattern mask = MaskPattern.MASK000;
         for (MaskPattern maskPattern : maskPatterns) {
             boolean[][] copy = data.clone();
-            FormatInformation formatInformation = FormatInformation.get(correction, mask);
+            FormatInformation formatInformation = FormatInformation.get(correction, maskPattern);
             placeFormatInformation(copy, formatInformation.formatInfo());
             MaskApplier.applyTo(copy, maskPattern.maskFunction(), modulesMask);
-
-            System.out.println("\n" + maskPattern);
 
             int i = calculatePenaltyFor(copy);
             if (i < comp) {
@@ -183,8 +178,12 @@ public class MaskSelector {
                 mask = maskPattern;
             }
         }
+
         FormatInformation formatInformation = FormatInformation.get(correction, mask);
         MaskApplier.applyTo(data, mask.maskFunction(), modulesMask);
+
+        System.out.println(calculatePenaltyFor(data) + " " + mask);
+
         int inform = formatInformation.formatInfo();
         placeFormatInformation(data, inform);
         return mask;
