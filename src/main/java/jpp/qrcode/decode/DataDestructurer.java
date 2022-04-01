@@ -12,11 +12,10 @@ public class DataDestructurer {
         for (int i = 0; i < blocks.length; i++) {
             try {
                 ReedSolomon.correct(blocks[i].dataBytes(), blocks[i].correctionBytes());
-                byte[] correctionBytes = ReedSolomon.calculateCorrectionBytes(blocks[i].dataBytes(), blocks[i].correctionBytes().length);
-                for (int j = 0; j < correctionBytes.length; j++) {
-                    bytes[limit + j] = correctionBytes[j];
+                for (int j = 0; j < blocks[i].dataBytes().length; j++) {
+                    bytes[limit + j] = blocks[i].dataBytes()[j];
                 }
-                limit = correctionBytes.length;
+                limit = blocks[i].dataBytes().length;
             } catch (ReedSolomonException e) {
                 throw new QRDecodeException("Data correction failed " + e.toString(), e.getCause());
             }
