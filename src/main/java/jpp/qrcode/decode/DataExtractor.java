@@ -29,7 +29,8 @@ public class DataExtractor {
             }
 
         } while (dataPositions.next());
-
+        if (bit != 0 && i <= bytes.length - 1)
+            bytes[i] = (byte) bit;
         return bytes;
     }
 }
