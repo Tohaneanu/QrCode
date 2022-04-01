@@ -39,10 +39,10 @@ public class MaskSelector {
         for (int i = 0; i < dataSize; i++) {
             lastRow = data[i][0];
             lastCol = data[i][0];
-            int currLenRow = 1;
-            int currLenCol = 1;
+            int currLenRow = 0;
+            int currLenCol = 0;
 
-            for (int j = 1; j < dataSize; j++) {
+            for (int j = 0; j < dataSize; j++) {
                 //Horizontal
                 if (data[i][j] == lastRow) {
                     currLenRow++;
@@ -76,8 +76,6 @@ public class MaskSelector {
             }
         }
 
-
-
         return penalty;
     }
 
@@ -88,7 +86,7 @@ public class MaskSelector {
         for (int i = 0; i < arrSize; i++) {
             for (int j = 0; j < arrSize; j++) {
                 if(i + 1 < arrSize && j + 1 < arrSize)
-                    if (arr[i][j] == arr[i][j])
+                    if (arr[i + 1][j] == arr[i][j])
                         if (arr[i][j + 1] == arr[i][j])
                             if (arr[i + 1][j + 1] == arr[i][j]) penalty += 3;
             }
@@ -137,8 +135,6 @@ public class MaskSelector {
             }
         }
 
-
-
         return penalty;
 
     }
@@ -181,6 +177,11 @@ public class MaskSelector {
 
         FormatInformation formatInformation = FormatInformation.get(correction, mask);
         MaskApplier.applyTo(data, mask.maskFunction(), modulesMask);
+
+        System.out.println(mask);
+        System.out.println(calculatePenaltySameColored(data));
+        System.out.println(calculatePenalty2x2(data));
+        System.out.println(calculatePenaltyBlackWhite(data));
 
         int inform = formatInformation.formatInfo();
         placeFormatInformation(data, inform);

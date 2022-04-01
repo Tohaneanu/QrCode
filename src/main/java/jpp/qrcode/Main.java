@@ -1,11 +1,17 @@
 package jpp.qrcode;
 
 import jpp.qrcode.decode.DataDecoder;
-import jpp.qrcode.decode.DataDestructurer;
-import jpp.qrcode.decode.DataExtractor;
-import jpp.qrcode.encode.DataInserter;
-import jpp.qrcode.encode.PatternPlacer;
+import jpp.qrcode.decode.Decoder;
+import jpp.qrcode.encode.Encoder;
+import jpp.qrcode.encode.MaskSelector;
+import jpp.qrcode.io.TextReader;
 import jpp.qrcode.reedsolomon.ReedSolomonException;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+
+import static jpp.qrcode.QRCode.createValidatedFromBooleans;
 
 public class Main {
     public static void main(String[] args) throws IllegalAccessException, ReedSolomonException {
@@ -104,15 +110,12 @@ public class Main {
 //        System.out.println("\n" + qrCode.matrixToString());
 //        byte a= (byte) 0b10000000;
 //        System.out.println(a);
+        //System.out.println(DataDecoder.readCharacterCount(new byte[]{0, (byte) 128}, 8));
+
+        QRCode qrCode = Encoder.createFromString("Hallo", ErrorCorrection.HIGH);
+        System.out.println("\n" + qrCode.matrixToString());
 
 
-//
-//        System.out.println(DataDecoder.readCharacterCount(new byte[]{0, (byte) 128}, 8));
-//
-//        QRCode qrCode = Encoder.createFromString("\"Hello there.\" - \"General QRCodi. You are a square one.\"", ErrorCorrection.QUARTILE);
-//        System.out.println("\n" + qrCode.matrixToString());
-//
-//
 //        boolean[][] data = new boolean[0][];
 //        File file = new File("C:/Users/User/Desktop/qrcode/examples/WueCampus_H.txt");
 //
@@ -123,18 +126,7 @@ public class Main {
 //            e.printStackTrace();
 //        }
 //        System.out.println(Decoder.decodeToString(createValidatedFromBooleans(data)));
-//        Version version = Version.fromNumber(1);
-//        byte[] destructure = DataDestructurer.destructure(new byte[]{0b01000000, 0b00000000, (byte) 0b11101100, 0b00010001, (byte) 0b11101100, 0b00010001, (byte) 0b11101100, 0b00010001, (byte) 0b11101100}, version.correctionInformationFor(ErrorCorrection.HIGH));
-//        String s = DataDecoder.decodeToString(destructure, version, ErrorCorrection.HIGH); System.out.println(s);
-//        String check = "[]";
-//        System.out.println(check);
-//        System.out.println(check.equals(s));
 
-          byte[] data= new byte[]{0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25};
-        boolean[][] blankForVersion = PatternPlacer.createBlankForVersion(Version.fromNumber(1));
-        DataInserter.insert(blankForVersion,ReservedModulesMask.forVersion(Version.fromNumber(1)),data);
-        byte[] extract = DataExtractor.extract(blankForVersion, ReservedModulesMask.forVersion(Version.fromNumber(1)), 26);
-        System.out.println();
 //        DataEncoderResult result = DataEncoder.encodeForCorrectionLevel("Hallo", ErrorCorrection.HIGH);
 //        System.out.println(DataDecoder.decodeToString(result.bytes(), result.version(), ErrorCorrection.HIGH));
 
@@ -168,7 +160,34 @@ public class Main {
 //       int[][] check=new int[21][21];
 //       extracted(boll,check);
         /// end check
-        System.out.println();
+
+
+//        boolean[][] data = {
+//                { true, true, true, true, true, true, true, false, true, true, false, false, false, false, true, true, true, true, true, true, true},
+//                { true, false, false, false, false, false, true, false, true, false, false, true, false, false, true, false, false, false, false, false, true},
+//                { true, false, true, true, true, false, true, false, true, false, false, true, true, false, true, false, true, true, true, false, true},
+//                { true, false, true, true, true, false, true, false, true, false, false, false, false, false, true, false, true, true, true, false, true},
+//                { true, false, true, true, true, false, true, false, true, false, true, false, false, false, true, false, true, true, true, false, true},
+//                { true, false, false, false, false, false, true, false, false, false, true, false, false, false, true, false, false, false, false, false, true},
+//                { true, true, true, true, true, true, true, false, true, false, true, false, true, false, true, true, true, true, true, true, true},
+//                { false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false},
+//                { false, true, true, false, true, false, true, true, false, false, false, false, true, false, true, false, true, true, true, true, true},
+//                { false, true, false, false, false, false, false, false, true, true, true, true, false, false, false, false, true, false, false, false, true},
+//                { false, false, true, true, false, true, true, true, false, true, true, false, false, false, true, false, true, true, false, false, false},
+//                { false, true, true, false, true, true, false, true, false, false, true, true, false, true, false, true, false, true, true, true, false},
+//                { true, false, false, false, true, false, true, false, true, false, true, true, true, false, true, true, true, false, true, false, true},
+//                { false, false, false, false, false, false, false, false, true, true, false, true, false, false, true, false, false, false, true, false, true},
+//                { true, true, true, true, true, true, true, false, true, false, true, false, false, false, false, true, false, true, true, false, false},
+//                { true, false, false, false, false, false, true, false, false, true, false, true, true, false, true, true, false, true, false, false, false},
+//                { true, false, true, true, true, false, true, false, true, false, true, false, false, false, true, true, true, true, true, true, true},
+//                { true, false, true, true, true, false, true, false, false, true, false, true, false, true, false, true, false, false, false, true, false},
+//                { true, false, true, true, true, false, true, false, true, false, false, false, true, true, true, true, false, true, false, false, true},
+//                { true, false, false, false, false, false, true, false, true, false, true, true, false, true, false, false, false, true, false, true, true},
+//                { true, true, true, true, true, true, true, false, false, false, false, false, true, true, true, true, false, false, false, false, true}
+//        };
+
+
+        //System.out.println(MaskSelector.calculatePenaltyFor(data));
 
     }
 
