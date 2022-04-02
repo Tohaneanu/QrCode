@@ -11,7 +11,7 @@ public class DataInserter {
         for (int i = 0; i < data.length; i++) {
             int temp = data[i];
 
-            if (data[i] < 0) temp = 256 + data[i];
+            if (temp < 0) temp += 256;
 
             String x = Integer.toBinaryString(temp);
             while (x.length() < 8) {
@@ -26,7 +26,7 @@ public class DataInserter {
         int i = 0;
         do {
             if (i == bytes.length) break;
-            target[dataPositions.i()][dataPositions.j()] = bytes[i] == 1;
+            target[dataPositions.i()][dataPositions.j()] = (bytes[i] == 1);
             i++;
         } while (dataPositions.next());
     }

@@ -72,13 +72,13 @@ public class PatternPlacer {
         int index = 0;
         for (int i = 0; i < 6; i++) {
             for (int j = 0; j < 3; j++) {
-                data[data.length - 9 - j][5 - i] = (int) binary.charAt(index++) == '1';
+                data[data.length - 9 - j][5 - i] = (binary.charAt(index++) == '1');
             }
         }
         index = 0;
         for (int i = 5; i > -1; i--) {
             for (int j = 0; j < 3; j++)
-                data[i][data.length - 9 - j] = (int) binary.charAt(index++) == '1';
+                data[i][data.length - 9 - j] = (binary.charAt(index++) == '1');
         }
 
     }

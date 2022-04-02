@@ -12,34 +12,35 @@ public class DataStructurer {
         int dataLen = data.length;
         int noOfBytes = dataLen / totalBlockCount;
         int rest = dataLen % totalBlockCount;
+        byte[] dataByte;
+
+        int dataIndex = 0;
+        int blockIndex = 0;
         int newSize = noOfBytes;
-        byte[] dataByte = new byte[noOfBytes];
+        int index = 0;
 
-        int dataIndex;
-        for (dataIndex = 0; dataIndex < totalBlockCount; ++dataIndex) {
-            dataBlocks[dataIndex] = new DataBlock(new byte[noOfBytes], new byte[correctionBytePerBlock]);
-        }
+        dataByte = new byte[noOfBytes];
 
-        dataIndex = 0;
-        int dataBlockIndex = 0;
-
-        for (int blockIndex = 0; dataIndex < dataLen; ++dataBlockIndex) {
-            if (dataBlockIndex == newSize) {
+        while(dataIndex < dataLen){
+            if(index == newSize){
                 dataBlocks[blockIndex] = new DataBlock(dataByte, ReedSolomon.calculateCorrectionBytes(dataByte, correctionBytePerBlock));
-                dataBlockIndex = 0;
-                ++blockIndex;
-                if (blockIndex == totalBlockCount - rest) {
+                blockIndex++;
+                index = 0;
+
+                if (blockIndex >= totalBlockCount - rest) {
                     newSize = noOfBytes + 1;
-                    --rest;
                 } else {
                     newSize = noOfBytes;
                 }
 
                 dataByte = new byte[newSize];
+            } else {
+                dataByte[index] = data[dataIndex];
+                dataIndex++;
+                index++;
             }
 
-            dataByte[dataBlockIndex] = data[dataIndex];
-            ++dataIndex;
+
         }
 
         dataBlocks[totalBlockCount - 1] = new DataBlock(dataByte, ReedSolomon.calculateCorrectionBytes(dataByte, correctionBytePerBlock));
@@ -53,7 +54,7 @@ public class DataStructurer {
         byte[][] dataBytes = new byte[totalBlockCount][];
         byte[][] correctionBlocks = new byte[totalBlockCount][];
 
-        for(int i = 0; i < totalBlockCount; ++i) {
+        for (int i = 0; i < totalBlockCount; i++) {
             dataBytes[i] = blocks[i].dataBytes();
             correctionBlocks[i] = blocks[i].correctionBytes();
             totalBytes += dataBytes[i].length + correctionBlocks[i].length;
@@ -63,24 +64,22 @@ public class DataStructurer {
         int minLen = dataBytes[0].length;
         int index = 0;
 
-        for(int i = 0; i < minLen; i++) {
+        for (int i = 0; i < minLen; i++) {
             for (int j = 0; j < totalBlockCount; j++) {
                 result[resultIndex] = dataBytes[j][i];
                 resultIndex++;
             }
         }
 
-        while(minLen == dataBytes[index].length){
+        while (minLen == dataBytes[index].length) {
             index++;
-            if(index == totalBlockCount)
+            if (index == totalBlockCount)
                 break;
         }
 
-        if(index < totalBlockCount) {
-            for (; index < totalBlockCount; index++) {
-                result[resultIndex] = dataBytes[index][minLen];
-                resultIndex++;
-            }
+        for (; index < totalBlockCount; index++) {
+            result[resultIndex] = dataBytes[index][minLen];
+            resultIndex++;
         }
 
         for (int i = 0; i < correctionBlocks[0].length; i++) {
