@@ -143,6 +143,7 @@ public class MaskSelector {
         int arrSize = array.length;
         int darkModules = 0;
         int modules = arrSize * arrSize;
+        int penalty = 0;
 
         for (int i = 0; i < arrSize; i++) {
             for (int j = 0; j < arrSize; j++) {
@@ -150,7 +151,35 @@ public class MaskSelector {
             }
         }
 
-        return 10 * (Math.abs(2 * darkModules - modules) * 10 / modules);
+        double percentage = (darkModules / modules) * 100.0;
+
+        int prev = 0;
+        int next;
+
+        while(prev + 5 < percentage){
+            prev += 5;
+        }
+        next = prev + 5;
+
+        prev -= 50;
+        next -= 50;
+
+        if(prev < 0)
+            prev = -prev;
+
+        if(next < 0)
+            next = -next;
+
+        prev /= 5;
+        next /= 5;
+
+        if(prev < next){
+            penalty = prev * 10;
+        } else {
+            penalty = next * 10;
+        }
+
+        return penalty;
     }
 
     public static int calculatePenaltyFor(boolean[][] data) {
