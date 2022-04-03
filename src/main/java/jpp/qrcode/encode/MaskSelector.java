@@ -1,18 +1,18 @@
 package jpp.qrcode.encode;
 
-import com.sun.jdi.AbsentInformationException;
 import jpp.qrcode.*;
+
+import java.util.ArrayList;
 
 
 public class MaskSelector {
     public static void placeFormatInformation(boolean[][] res, int formatInformation) {
         String binary = Integer.toBinaryString(formatInformation);
 
-        while (binary.length() < 15)
-            binary = '0' + binary;
+        while (binary.length() < 15) binary = '0' + binary;
 
         for (int i = 0; i < 6; i++) {
-            res[8][i] =  (binary.charAt(i) == '1');
+            res[8][i] = (binary.charAt(i) == '1');
         }
         res[8][7] = (binary.charAt(6) == '1');
         res[8][8] = (binary.charAt(7) == '1');
@@ -84,10 +84,8 @@ public class MaskSelector {
 
         for (int i = 0; i < arrSize; i++) {
             for (int j = 0; j < arrSize; j++) {
-                if(i + 1 < arrSize && j + 1 < arrSize)
-                    if (arr[i + 1][j] == arr[i][j])
-                        if (arr[i][j + 1] == arr[i][j])
-                            if (arr[i + 1][j + 1] == arr[i][j]) penalty += 3;
+                if (i + 1 < arrSize && j + 1 < arrSize) if (arr[i + 1][j] == arr[i][j])
+                    if (arr[i][j + 1] == arr[i][j]) if (arr[i + 1][j + 1] == arr[i][j]) penalty += 3;
             }
         }
 
@@ -95,21 +93,37 @@ public class MaskSelector {
         return penalty;
     }
 
-    private static int blackWhitePattern(String str, String pattern) {
+    private static int blackWhitePattern(String str, String[] pattern) {
         int index;
         int penalty = 0;
-        do {
-            if (pattern.length() > str.length()) break;
-
-            index = str.indexOf(pattern);
-            if (index != -1) {
-                penalty += 40;
-                str = str.substring(index + pattern.length());
-                while(str.charAt(0) == '0')
-                    str = str.substring(1);
-            }
-        } while (index != -1);
-
+        String str1 = new StringBuffer(str).toString();
+        ArrayList<Integer> aux = new ArrayList<>();
+        for (int i = 0; i < pattern.length; i++) {
+            if (i == 1)
+                str = str1;
+            do {
+                if (pattern[i].length() > str.length()) break;
+                index = str.indexOf(pattern[i]);
+                if (index != -1) {
+                    if (i == 0) {
+                        penalty += 40;
+                        str = str.substring(index + pattern[i].length(), str.length());
+                        aux.add(index);
+                    } else {
+                        boolean check = true;
+                        for (Integer integer : aux) {
+                            if (Math.abs(integer - index) <= 4) {
+                                check = false;
+                            }
+                        }
+                        if (check) {
+                            penalty += 40;
+                            str = str.substring(index + pattern[i].length(), str.length());
+                        } else str = str.substring(index + pattern[i].length(), str.length());
+                    }
+                }
+            } while (index != -1);
+        }
         return penalty;
     }
 
@@ -124,20 +138,15 @@ public class MaskSelector {
 
         for (int i = 0; i < arrSize; i++) {
             for (int j = 0; j < arrSize; j++) {
-                qrV[i] += (char) (arr[i][j] == true ? '1' : '0');
-                qrH[i] += (char) (arr[j][i] == true ? '1' : '0');
+                qrH[i] += (char) (arr[i][j] ? '1' : '0');
+                qrV[i] += (char) (arr[j][i] ? '1' : '0');
             }
         }
-
         for (int i = 0; i < arrSize; i++) {
-            for (int j = 0; j < 2; j++) {
-                penalty += blackWhitePattern(qrH[i], patterns[j]);
-                penalty += blackWhitePattern(qrV[i], patterns[j]);
-            }
+            penalty += blackWhitePattern(qrH[i], patterns);
+            penalty += blackWhitePattern(qrV[i], patterns);
         }
-        System.out.println("black withe: " + penalty);
         return penalty;
-
     }
 
     public static int calculatePenaltyPattern(boolean[][] array) {
@@ -151,8 +160,7 @@ public class MaskSelector {
                 if (array[i][j]) darkModules++;
             }
         }
-        penalty = 10 * (Math.abs(2 * darkModules - modules) * 10  / modules);
-        System.out.println("%: "+ penalty);
+        penalty = 10 * (Math.abs(2 * darkModules - modules) * 10 / modules);
         return penalty;
     }
 
@@ -180,14 +188,15 @@ public class MaskSelector {
 
         FormatInformation formatInformation = FormatInformation.get(correction, mask);
         MaskApplier.applyTo(data, mask.maskFunction(), modulesMask);
-
+        int inform = formatInformation.formatInfo();
+        placeFormatInformation(data, inform);
         System.out.println(mask);
         System.out.println(calculatePenaltySameColored(data));
         System.out.println(calculatePenalty2x2(data));
         System.out.println(calculatePenaltyBlackWhite(data));
+        System.out.println(calculatePenaltyPattern(data));
 
-        int inform = formatInformation.formatInfo();
-        placeFormatInformation(data, inform);
+
         return mask;
     }
 }
