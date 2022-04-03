@@ -105,6 +105,8 @@ public class MaskSelector {
             if (index != -1) {
                 penalty += 40;
                 str = str.substring(index + pattern.length());
+                while(str.charAt(0) == '0')
+                    str = str.substring(1);
             }
         } while (index != -1);
 
