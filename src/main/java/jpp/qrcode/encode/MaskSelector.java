@@ -129,10 +129,11 @@ public class MaskSelector {
         }
 
         for (int i = 0; i < arrSize; i++) {
-            for (int j = 0; j < 2; j++) {
-                penalty += blackWhitePattern(qrH[i], patterns[j]);
-                penalty += blackWhitePattern(qrV[i], patterns[j]);
-            }
+            penalty += blackWhitePattern(qrH[i], patterns[0]);
+            penalty += blackWhitePattern(qrV[i], patterns[0]);
+
+            penalty += blackWhitePattern(qrH[i], patterns[1]);
+            penalty += blackWhitePattern(qrV[i], patterns[1]);
         }
 
         return penalty;
@@ -143,7 +144,7 @@ public class MaskSelector {
         int arrSize = array.length;
         int darkModules = 0;
         int modules = arrSize * arrSize;
-        int penalty = 0;
+        int penalty;
 
         for (int i = 0; i < arrSize; i++) {
             for (int j = 0; j < arrSize; j++) {
@@ -151,33 +152,7 @@ public class MaskSelector {
             }
         }
 
-        double percentage = (darkModules / modules) * 100.0;
-
-        int prev = 0;
-        int next;
-
-        while(prev + 5 < percentage){
-            prev += 5;
-        }
-        next = prev + 5;
-
-        prev -= 50;
-        next -= 50;
-
-        if(prev < 0)
-            prev = -prev;
-
-        if(next < 0)
-            next = -next;
-
-        prev /= 5;
-        next /= 5;
-
-        if(prev < next){
-            penalty = prev * 10;
-        } else {
-            penalty = next * 10;
-        }
+        penalty = 10 * (Math.abs(2 * darkModules - modules) * 10  / modules);
 
         return penalty;
     }
@@ -207,9 +182,7 @@ public class MaskSelector {
         FormatInformation formatInformation = FormatInformation.get(correction, mask);
         MaskApplier.applyTo(data, mask.maskFunction(), modulesMask);
 
-        System.out.println(mask);
-        System.out.println(calculatePenaltySameColored(data));
-        System.out.println(calculatePenalty2x2(data));
+        System.out.print(mask + " ");
         System.out.println(calculatePenaltyBlackWhite(data));
 
         int inform = formatInformation.formatInfo();
