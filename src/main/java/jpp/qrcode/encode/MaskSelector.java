@@ -168,7 +168,10 @@ public class MaskSelector {
         int comp = Integer.MAX_VALUE;
         MaskPattern mask = MaskPattern.MASK000;
         for (MaskPattern maskPattern : maskPatterns) {
-            boolean[][] copy = data.clone();
+            boolean[][] copy = new boolean[data.length][data.length];
+            for (int i=0;i< data.length;i++)
+                for (int j=0;j< data.length;j++)
+                    copy[i][j]=data[i][j];
             FormatInformation formatInformation = FormatInformation.get(correction, maskPattern);
             placeFormatInformation(copy, formatInformation.formatInfo());
             MaskApplier.applyTo(copy, maskPattern.maskFunction(), modulesMask);
