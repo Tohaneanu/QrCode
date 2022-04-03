@@ -6,9 +6,9 @@ import jpp.qrcode.Version;
 
 public final class DataEncoder {
     public static DataEncoderResult encodeForCorrectionLevel(String str, ErrorCorrection level) {
-        Version test = Version.fromNumber(40);
-        if (test.totalByteCount() < str.length())
-            throw new StringIndexOutOfBoundsException(" String index out of range: " + str.length());
+//        Version test = Version.fromNumber(40);
+//        if (test.totalByteCount() < str.length() * 8)
+//            throw new StringIndexOutOfBoundsException(" String index out of range: " + str.length());
 
         String bytes = "0100";
 
@@ -80,8 +80,10 @@ public final class DataEncoder {
                 bytesIndex++;
             }
 
-            result[resultIndex] = aux;
-            resultIndex++;
+            if(aux != 0) {
+                result[resultIndex] = aux;
+                resultIndex++;
+            }
         }
 
         int step = 0;
