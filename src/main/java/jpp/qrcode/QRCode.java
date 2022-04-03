@@ -42,6 +42,8 @@ public class QRCode {
                     x.append(d).append(d);
                 }
             }
+            if (i == matrix.length - 1)
+                break;
             x.append("\n");
 
         }
@@ -228,7 +230,7 @@ public class QRCode {
             if (FormatInformation.fromBits(inf1) != null) formatInformation = FormatInformation.fromBits(inf1);
             else formatInformation = FormatInformation.fromBits(inf2);
         }
-        if (formatInformation==null)
+        if (formatInformation == null)
             throw new InvalidQRCodeException("Format information is null!");
         return formatInformation;
     }
