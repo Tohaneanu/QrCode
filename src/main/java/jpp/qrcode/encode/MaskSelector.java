@@ -8,7 +8,6 @@ import java.util.ArrayList;
 public class MaskSelector {
     public static void placeFormatInformation(boolean[][] res, int formatInformation) {
         String binary = Integer.toBinaryString(formatInformation);
-
         while (binary.length() < 15) binary = '0' + binary;
 
         for (int i = 0; i < 6; i++) {
@@ -185,11 +184,10 @@ public class MaskSelector {
                 mask = maskPattern;
             }
         }
-
         FormatInformation formatInformation = FormatInformation.get(correction, mask);
-        MaskApplier.applyTo(data, mask.maskFunction(), modulesMask);
         int inform = formatInformation.formatInfo();
         placeFormatInformation(data, inform);
+        MaskApplier.applyTo(data, mask.maskFunction(), modulesMask);
         System.out.println(mask);
         System.out.println(calculatePenaltySameColored(data));
         System.out.println(calculatePenalty2x2(data));
