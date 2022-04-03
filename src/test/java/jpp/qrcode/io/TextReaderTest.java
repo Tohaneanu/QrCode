@@ -11,7 +11,7 @@ public class TextReaderTest extends TestCase {
 
     public void testRead() {
         boolean[][] data = new boolean[0][];
-        File file = new File("C:/Users/User/Desktop/qrcode/examples/Hallo_Q.txt");
+        File file = new File("C:\\Users\\grecu\\IdeaProjects\\QrCode\\examples\\Hallo_H.txt");
 
         try (InputStream in = new FileInputStream(file)) {
             data = TextReader.read(in);

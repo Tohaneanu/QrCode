@@ -44,8 +44,7 @@ public class QRCode {
             }
             if (i == matrix.length - 1)
                 break;
-            x.append("\n");
-
+            x.append('\n');
         }
         return x.toString();
     }
