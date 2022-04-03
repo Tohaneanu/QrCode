@@ -98,8 +98,7 @@ public class MaskSelector {
         String str1 = new StringBuffer(str).toString();
         ArrayList<Integer> aux = new ArrayList<>();
         for (int i = 0; i < pattern.length; i++) {
-            if (i == 1)
-                str = str1;
+            if (i == 1) str = str1;
             do {
                 if (pattern[i].length() > str.length()) break;
                 index = str.indexOf(pattern[i]);
@@ -128,38 +127,34 @@ public class MaskSelector {
 
     public static int calculatePenaltyBlackWhite(boolean[][] arr) {
         int arrSize = arr.length;
+        int darkModules = 0;
+        int modules = arrSize * arrSize;
         int penalty = 0;
-
-        String[] patterns = {"00001011101", "10111010000"};
-
-        String[] qrV = new String[arrSize];
-        String[] qrH = new String[arrSize];
-
         for (int i = 0; i < arrSize; i++) {
             for (int j = 0; j < arrSize; j++) {
-                qrH[i] += (char) (arr[i][j] ? '1' : '0');
-                qrV[i] += (char) (arr[j][i] ? '1' : '0');
+                if (arr[i][j]) darkModules++;
+            }
+        }
+        penalty = 10 * (Math.abs(2 * darkModules - modules) * 10 / modules);
+        return penalty;
+    }
+
+    public static int calculatePenaltyPattern(boolean[][] array) {
+        int arrSize = array.length;
+        int penalty = 0;
+        String[] patterns = {"00001011101", "10111010000"};
+        String[] qrV = new String[arrSize];
+        String[] qrH = new String[arrSize];
+        for (int i = 0; i < arrSize; i++) {
+            for (int j = 0; j < arrSize; j++) {
+                qrH[i] += (char) (array[i][j] ? '1' : '0');
+                qrV[i] += (char) (array[j][i] ? '1' : '0');
             }
         }
         for (int i = 0; i < arrSize; i++) {
             penalty += blackWhitePattern(qrH[i], patterns);
             penalty += blackWhitePattern(qrV[i], patterns);
         }
-        return penalty;
-    }
-
-    public static int calculatePenaltyPattern(boolean[][] array) {
-        int arrSize = array.length;
-        int darkModules = 0;
-        int modules = arrSize * arrSize;
-        int penalty = 0;
-
-        for (int i = 0; i < arrSize; i++) {
-            for (int j = 0; j < arrSize; j++) {
-                if (array[i][j]) darkModules++;
-            }
-        }
-        penalty = 10 * (Math.abs(2 * darkModules - modules) * 10 / modules);
         return penalty;
     }
 
