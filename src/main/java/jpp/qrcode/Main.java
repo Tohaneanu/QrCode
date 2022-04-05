@@ -4,8 +4,7 @@ import jpp.qrcode.decode.DataDecoder;
 import jpp.qrcode.decode.DataDestructurer;
 import jpp.qrcode.decode.DataExtractor;
 import jpp.qrcode.decode.Decoder;
-import jpp.qrcode.encode.Encoder;
-import jpp.qrcode.encode.MaskSelector;
+import jpp.qrcode.encode.*;
 import jpp.qrcode.io.TextReader;
 import jpp.qrcode.reedsolomon.ReedSolomonException;
 
@@ -114,10 +113,11 @@ public class Main {
 //        System.out.println(a);
         //System.out.println(DataDecoder.readCharacterCount(new byte[]{0, (byte) 128}, 8));
 
-        QRCode qrCode = Encoder.createFromString("Hallo",
-                ErrorCorrection.MEDIUM);
-        System.out.println("\n" + qrCode.matrixToString());
-//
+//        QRCode qrCode = Encoder.createFromString("Hallo",
+//                ErrorCorrection.LOW);
+//        System.out.println("\n" + qrCode.matrixToString());
+
+
 //        boolean[][] data = new boolean[0][];
 //        File file = new File("C:/Users/User/Desktop/qrcode/examples/WueCampus_H.txt");
 //
@@ -128,11 +128,11 @@ public class Main {
 //            e.printStackTrace();
 //        }
 //        System.out.println(Decoder.decodeToString(createValidatedFromBooleans(data)));
-        //System.out.println(DataDecoder.readEncoding(new byte[]{16}));
+//        System.out.println(DataDecoder.readEncoding(new byte[]{16}));
 //        DataEncoderResult result = DataEncoder.encodeForCorrectionLevel("Hallo", ErrorCorrection.HIGH);
 //        System.out.println(DataDecoder.decodeToString(result.bytes(), result.version(), ErrorCorrection.HIGH));
-
-
+//
+//
 //        //check data insert and data extract!
 //        boolean[][] blankForVersion = PatternPlacer.createBlankForVersion(Version.fromNumber(1));
 //        int[][] check = new int[blankForVersion.length][blankForVersion.length];
@@ -191,6 +191,23 @@ public class Main {
 
         //System.out.println(MaskSelector.calculatePenaltyFor(data));
 
+        boolean[][] data = new boolean[0][];
+        File file = new File("C:\\Users\\grecu\\IdeaProjects\\QrCode\\examples\\WueCampus_M.txt");
+        //File file = new File("C:\\Users\\grecu\\IdeaProjects\\QrCode\\examples\\Hallo_L.txt");
+        try (InputStream in = new FileInputStream(file)) {
+            data = TextReader.read(in);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        QRCode qr=QRCode.createValidatedFromBooleans(data);
+        String str= qr.matrixToString();
+        QRCode hallo = Encoder.createFromString("https://wuecampus2.uni-wuerzburg.de/moodle/", ErrorCorrection.MEDIUM);
+        //QRCode hallo = Encoder.createFromString("Hallo", ErrorCorrection.LOW);
+        String str2=hallo.matrixToString();
+        if (str2.equals(str)){
+            System.out.println("true");
+        }
     }
 
     private static void extracted(boolean[][] blankForVersion, int[][] check) {

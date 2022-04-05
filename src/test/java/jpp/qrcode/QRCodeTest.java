@@ -33,8 +33,9 @@ public class QRCodeTest extends TestCase {
         for (int i = 0; i < files.length; i++) {
             try (InputStream in = new FileInputStream(files[i])) {
                 data = TextReader.read(in);
-                System.out.print(files[i] + " ");
-                MaskSelector.maskWithBestMask(data, errorCorrections[i], ReservedModulesMask.forVersion(Version.fromNumber((data.length - 17) / 4)));
+                System.out.println(files[i]);
+                MaskSelector.calculatePenaltyPattern(data);
+                MaskSelector.calculatePenaltyBlackWhite(data);
 //                QRCode qrCode = QRCode.createValidatedFromBooleans(data);
 //                System.out.println(Decoder.decodeToString(qrCode));
 //                assertEquals(qrCode.version.number(), version[i]);

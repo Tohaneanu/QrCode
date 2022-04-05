@@ -50,19 +50,23 @@ public final class DataEncoder {
         int rest = errorCorrectionInformation.totalDataByteCount() - resultLen;
 
         if(rest < 0) {
-            version = Version.forDataBytesCount(resultLen, level);
-            if(version.number() >= 10) {
-                bytes = bytes.substring(12);
+            do {
+                version = Version.forDataBytesCount(resultLen, level);
+                errorCorrectionInformation = version.correctionInformationFor(level);
 
-                cci = Integer.toBinaryString(strLen);
-                while (cci.length() < 16) {
-                    cci = '0' + cci;
+                if (version.number() >= 10) {
+                    bytes = bytes.substring(12);
+
+                    cci = Integer.toBinaryString(strLen);
+                    while (cci.length() < 16) {
+                        cci = '0' + cci;
+                    }
+
+                    bytes = "0100" + cci + bytes;
                 }
 
-                bytes = "0100" + cci + bytes;
-                errorCorrectionInformation = version.correctionInformationFor(level);
-            }
-            rest = errorCorrectionInformation.totalDataByteCount() - resultLen;
+                rest = errorCorrectionInformation.totalDataByteCount() - resultLen;
+            } while (rest < 0);
         }
 
         if (rest != 0) {
@@ -80,10 +84,8 @@ public final class DataEncoder {
                 bytesIndex++;
             }
 
-            if(aux != 0) {
-                result[resultIndex] = aux;
-                resultIndex++;
-            }
+            result[resultIndex] = aux;
+            resultIndex++;
         }
 
         int step = 0;
